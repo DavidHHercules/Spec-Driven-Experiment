@@ -16,8 +16,8 @@ T23 is a refactor: **no test assertions may change.**
 | T26 | `runSnapshots` — success path | R34, R39, R41–R44, R48 | ☑ |
 | T27 | `runSnapshots` — failures and late runs | R35, R45–R48 | ☑ |
 | T28 | Table store, timer adapter, Azurite setup | R43, R44, N9 | ☑ |
-| T29 | Local acceptance | §8 | ☐ |
-| T30 | Acceptance review | §8 | ☐ |
+| T29 | Local acceptance | §8 | ☑ |
+| T30 | Acceptance review | §8 | ☑ |
 
 ---
 
@@ -89,14 +89,19 @@ is observable; throws for listed location ids).
 
 ## T29 — Local acceptance (Azurite + `func start`)
 
-- [ ] Host lists both functions: `weather` (HTTP) and `snapshots` (timer).
-- [ ] Manual trigger (`POST /admin/functions/snapshots`) stores one row per configured location.
-- [ ] Second trigger within the same 15-min window → still one row per location (R44).
-- [ ] One invalid entry in `SNAPSHOT_LOCATIONS` → valid ones stored, summary shows `skipped=1`.
-- [ ] `GET /api/weather` still returns 200.
+- [x] Host lists both functions: `weather` (HTTP) and `snapshots` (timer).
+- [x] Manual trigger (`POST /admin/functions/snapshots`) stores one row per configured location.
+- [x] Second trigger within the same 15-min window → still one row per location (R44).
+- [x] One invalid entry in `SNAPSHOT_LOCATIONS` → valid ones stored, summary shows `skipped=1`.
+- [x] `GET /api/weather` still returns 200.
+
+> **Result (2026-11-08, Node 22):** first attempt failed — host could not load functions on
+> Node 20.11 (`ERR_REQUIRE_ESM`); fixed by upgrading Node (plan §9). Then: both functions listed;
+> run 1 `saved=3 failed=0 skipped=1` → 3 rows; run 2 in same window → still 3 rows, `fetchedAt`
+> updated (overwrite, R44); `GET /api/weather` → 200.
 
 ## T30 — Acceptance review
 
-- [ ] Every rule R34–R48 has a test whose name starts with its ID.
-- [ ] All pre-existing tests pass unchanged.
-- [ ] Spec §8 ticked; statuses updated; README → Done.
+- [x] Every rule R34–R48 has a test whose name starts with its ID.
+- [x] All pre-existing tests pass unchanged.
+- [x] Spec §8 ticked; statuses updated; README → Done.

@@ -1,7 +1,8 @@
 # Spec 003: Scheduled Weather Snapshots
 
-- **Status:** Approved
+- **Status:** Implemented
 - **Approved:** 2026-11-08
+- **Implemented:** 2026-11-08
 - **Author:** David Hercules
 - **Created:** 2026-11-08
 - **Depends on:** [Spec 001](001-current-weather.md) (fetching + mapping), [Spec 002](002-upstream-resilience.md) (timeouts + retries)
@@ -112,11 +113,11 @@ None. `GET /api/weather` is unchanged. The upstream-calling code is **shared**, 
 
 ## 8. Acceptance criteria
 
-- [ ] Every rule R34–R48 has at least one automated test (R34's schedule is verified by inspection of the registration plus a test of the exported schedule constant).
-- [ ] Locally with Azurite + `func start`, triggering `snapshots` manually stores one row per configured location in `weathersnapshots`.
-- [ ] Triggering twice within 15 minutes leaves one row per location, not two (R44).
-- [ ] With one location pointed at an invalid entry and one valid, the valid one is stored and the summary shows `skipped=1`.
-- [ ] `GET /api/weather` still behaves exactly as before; all existing tests pass unchanged.
+- [x] Every rule R34–R48 has at least one automated test (R34's schedule is verified by inspection of the registration plus a test of the exported schedule constant).
+- [x] Locally with Azurite + `func start`, triggering `snapshots` manually stores one row per configured location in `weathersnapshots`.
+- [x] Triggering twice within 15 minutes leaves one row per location, not two (R44).
+- [x] With one location pointed at an invalid entry and one valid, the valid one is stored and the summary shows `skipped=1`.
+- [x] `GET /api/weather` still behaves exactly as before; all existing tests pass unchanged.
 
 ## 9. Decisions
 
@@ -184,3 +185,4 @@ Proposed by Claude; all approved by David as written (2026-11-08).
 | 2026-11-08 | Draft created with proposed decisions D15–D23. |
 | 2026-11-08 | Review: D15–D23 approved as proposed. Status → Approved. |
 | 2026-11-08 | Amendment from planning feedback (plan §7): R38 clarifies only valid entries claim an id (F6); §4 intro wording (F7). |
+| 2026-11-08 | Implemented (tasks T23–T30). All acceptance criteria met against Azurite + func host. Required upgrading local Node 20 → 22 (plan §9). Status → Implemented. |
