@@ -1,4 +1,4 @@
-☑ |☑ |☑ |☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
+☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
 
 - **Implements:** [Spec 001](001-current-weather.md) via [Plan 001](001-current-weather.plan.md)
 - **Created:** 2026-11-07
@@ -174,10 +174,10 @@ Install `@azure/functions` (dependency) and `typescript`, `vitest`, `@types/node
 and `context.log` / `context.error`.
 
 **Done when**
-- [ ] `npm run build` produces `dist/src/functions/weather.js`.
-- [ ] `methods: ['GET']`, `authLevel: 'anonymous'`, route `weather` (R20).
-- [ ] N2: `grep -r "@azure/functions" src/core` returns nothing.
-- [ ] Adapter contains no branching logic beyond wiring (keep it boring).
+- [x] `npm run build` produces `dist/src/functions/weather.js`.
+- [x] `methods: ['GET']`, `authLevel: 'anonymous'`, route `weather` (R20).
+- [x] N2: `grep -r "@azure/functions" src/core` returns nothing.
+- [x] Adapter contains no branching logic beyond wiring (keep it boring).
 
 ## T12 — Local smoke test
 
