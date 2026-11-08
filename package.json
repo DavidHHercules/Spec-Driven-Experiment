@@ -1,0 +1,23 @@
+{
+  "name": "weather-summary-func",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Azure Function App wrapping Open-Meteo. Spec-driven development practice project.",
+  "main": "dist/src/functions/*.js",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit -p tsconfig.test.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prestart": "npm run build",
+    "start": "func start"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.17.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "typescript": "~5.9.3",
+    "vitest": "^3.2.7"
+  }
+}

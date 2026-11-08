@@ -17,7 +17,7 @@
 
 | Task | Title | Rules | Status |
 |------|-------|-------|--------|
-| T1  | Project scaffolding | — | ☐ |
+| T1  | Project scaffolding | — | ☑ |
 | T2  | Shared types and error builder | §3 | ☐ |
 | T3  | `parseCoordinate` | §4.1, D2 | ☐ |
 | T4  | `validateQuery` | R2–R8, R19, R21 | ☐ |
@@ -40,10 +40,12 @@ Create the files from plan §3 that aren't code: `package.json`, `tsconfig.json`
 Install `@azure/functions` (dependency) and `typescript`, `vitest`, `@types/node` (dev).
 
 **Done when**
-- [ ] `npm install` succeeds.
-- [ ] `npm run build` succeeds (no source files yet is fine).
-- [ ] `npm test` succeeds with zero tests (`passWithNoTests`).
-- [ ] `node_modules/`, `dist/`, `local.settings.json` are git-ignored.
+- [x] `npm install` succeeds.
+- [x] `npm test` succeeds with zero tests (`passWithNoTests`).
+- [x] `node_modules/`, `dist/`, `local.settings.json` are git-ignored.
+
+> *Correction:* originally also required `npm run build` to succeed, but `tsc` errors when
+> there are no source files (TS18003). Build check moved to T2.
 
 ## T2 — Shared types and error builder
 
@@ -51,7 +53,7 @@ Install `@azure/functions` (dependency) and `typescript`, `vitest`, `@types/node
 `errorBody(code, message)` helper that produces the spec §3 error shape.
 
 **Done when**
-- [ ] Types compile under `strict`.
+- [ ] `npm run build` and `npm run typecheck` succeed (types compile under `strict`).
 - [ ] One test confirms `errorBody` output matches spec §3 exactly.
 
 ## T3 — `parseCoordinate`

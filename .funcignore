@@ -1,0 +1,11 @@
+*.js.map
+*.ts
+.git*
+.vscode
+coverage
+local.settings.json
+local.settings.example.json
+specs
+test
+tsconfig*.json
+vitest.config.ts

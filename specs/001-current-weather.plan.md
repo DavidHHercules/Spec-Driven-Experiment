@@ -12,14 +12,20 @@ we fix the plan (or raise a spec change, see §9).
 
 | Concern            | Choice | Why |
 |--------------------|--------|-----|
-| Runtime            | Node.js 20 | Installed locally; supported by Azure Functions v4. |
-| Language           | TypeScript 5, `strict: true` | Catches shape mismatches (e.g. upstream JSON) at compile time. |
+| Runtime            | Node.js 20 locally (**upgrade to 22 recommended**, see note) | Installed locally. |
+| Language           | TypeScript 5.9, `strict: true` | Catches shape mismatches (e.g. upstream JSON) at compile time. |
 | Functions model    | Azure Functions **Node.js v4 programming model** (`@azure/functions` v4) | Current model: functions registered in code with `app.http(...)`, no `function.json` files. |
 | HTTP client        | Built-in `fetch` (Node 20) | No dependency needed. |
 | Test runner        | Vitest | Runs TypeScript directly, fast, Jest-like API. |
 | Local host         | Azure Functions Core Tools v4 (`func start`) | Required for acceptance criteria in spec §7. |
 
 No other runtime dependencies.
+
+> **Version note (found during T1, 2026-11-07):** Node 20 reached end-of-life in April 2026,
+> and current Vitest (5.x) requires Node ≥ 22. To avoid blocking, we pinned
+> **Vitest 3.2** and **TypeScript 5.9**, both of which run on Node 20 *and* 22, plus
+> `@types/node@20` to match the local runtime. Upgrading local Node to 22 later needs no
+> code changes. Deployment (Spec 004) must target a supported Node version (22+).
 
 ## 2. Architecture
 
