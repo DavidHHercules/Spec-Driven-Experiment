@@ -1,7 +1,8 @@
 # Spec 004: Deployment Readiness
 
-- **Status:** Approved
+- **Status:** Implemented (deployment itself pending a subscription — see docs/deploy.md §9)
 - **Approved:** 2026-11-08
+- **Implemented:** 2026-11-08
 - **Author:** David Hercules
 - **Created:** 2026-11-08
 - **Depends on:** Specs [001](001-current-weather.md), [002](002-upstream-resilience.md), [003](003-weather-snapshots.md)
@@ -119,13 +120,13 @@ Anything requiring a live subscription is explicitly listed as **unverified** in
 
 ## 8. Acceptance criteria
 
-- [ ] `bicep build` + `bicep lint` on `infra/main.bicep`: zero errors, zero warnings.
-- [ ] No secrets/keys found by the R51 search.
-- [ ] R54 selection covered by unit tests; local Azurite run still stores snapshots.
-- [ ] CI commands pass locally on Node 22; both workflow files parse as valid YAML with the expected triggers.
-- [ ] Locally built deployment package matches R61.
-- [ ] Runbook covers every R60 item, and lists what remains unverified.
-- [ ] All existing tests pass unchanged.
+- [x] `bicep build` + `bicep lint` on `infra/main.bicep`: zero errors, zero warnings.
+- [x] No secrets/keys found by the R51 search.
+- [x] R54 selection covered by unit tests; local Azurite run still stores snapshots.
+- [x] CI commands pass locally on Node 22; both workflow files parse as valid YAML with the expected triggers.
+- [x] Locally built deployment package matches R61.
+- [x] Runbook covers every R60 item, and lists what remains unverified.
+- [x] All existing tests pass unchanged.
 
 ## 9. Decisions
 
@@ -182,3 +183,4 @@ Proposed by Claude; all approved by David as written (2026-11-08).
 |------------|--------|
 | 2026-11-08 | Draft created with proposed decisions D24–D31. |
 | 2026-11-08 | Review: D24–D31 approved as proposed. Status → Approved. |
+| 2026-11-08 | Implemented (tasks T31–T38). All acceptance criteria met without a subscription; items needing live Azure listed in docs/deploy.md §9. |

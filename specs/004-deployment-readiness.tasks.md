@@ -15,8 +15,8 @@ Same rules: in order, one task = one commit, tests first where there is code.
 | T34 | CI workflow | R58, N11, N12 | ☑ |
 | T35 | Deploy workflow | R59 | ☑ |
 | T36 | Runbook | R60, N13 | ☑ |
-| T37 | Verification sweep | §5 | ☐ |
-| T38 | Acceptance review | §8 | ☐ |
+| T37 | Verification sweep | §5 | ☑ |
+| T38 | Acceptance review | §8 | ☑ |
 
 ---
 
@@ -64,10 +64,16 @@ Same rules: in order, one task = one commit, tests first where there is code.
 
 ## T37 — Verification sweep
 
-- [ ] R51 search: no keys or connection strings in repo or compiled template.
-- [ ] Azurite + `func start`: snapshots still stored (R55).
-- [ ] Full test suite passes; existing tests unchanged.
+- [x] R51 search: no keys or connection strings in repo or compiled template.
+- [x] Azurite + `func start`: snapshots still stored (R55).
+- [x] Full test suite passes; existing tests unchanged.
+
+> **Result (2026-11-08):** R51 search clean (only spec text and one key-less test fixture match;
+> compiled template: none). Azurite regression: both functions load, `saved=3`. Bonus: host
+> started after a missed :00 run and fired it with `isPastDue` — Spec 003 R35 observed on the
+> real host for the first time. Only test change since Spec 004 began: new tests appended to
+> `tableSnapshotStore.test.ts` (one import line widened).
 
 ## T38 — Acceptance review
 
-- [ ] Spec §8 ticked; statuses updated; README → Done.
+- [x] Spec §8 ticked; statuses updated; README → Done.
