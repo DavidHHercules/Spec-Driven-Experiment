@@ -1,3 +1,11 @@
+import type { ErrorCode } from './types';
+
+export type ValidationResult =
+  | { ok: true; lat: number; lon: number }
+  | { ok: false; code: ErrorCode; message: string };
+
+type FieldResult = { ok: true; value: number } | { ok: false; code: ErrorCode; message: string };
+
 /** Spec §4.1: optional '-', digits, optional '.' followed by digits. */
 const COORDINATE_FORMAT = /^-?\d+(\.\d+)?$/;
 
@@ -13,4 +21,44 @@ export function parseCoordinate(raw: string): number | null {
     return null;
   }
   return Number(trimmed);
+}
+
+/**
+ * Validates the request query (R2–R8, R19, R21).
+ * Only `lat` and `lon` are read; other params are ignored (R19).
+ * `get` returns the first occurrence, so later duplicates are ignored (R21).
+ * `lat` is fully checked before `lon`, and only the first problem is reported (R8).
+ */
+export function validateQuery(q: URLSearchParams): ValidationResult {
+  const lat = checkField(q, 'lat', 90, 'MISSING_LAT', 'INVALID_LAT');
+  if (!lat.ok) return lat;
+
+  const lon = checkField(q, 'lon', 180, 'MISSING_LON', 'INVALID_LON');
+  if (!lon.ok) return lon;
+
+  return { ok: true, lat: lat.value, lon: lon.value };
+}
+
+function checkField(
+  q: URLSearchParams,
+  name: 'lat' | 'lon',
+  limit: number,
+  missingCode: ErrorCode,
+  invalidCode: ErrorCode,
+): FieldResult {
+  const raw = q.get(name);
+  if (raw === null) {
+    return { ok: false, code: missingCode, message: `${name} is required` };
+  }
+
+  const value = parseCoordinate(raw);
+  if (value === null || value < -limit || value > limit) {
+    return {
+      ok: false,
+      code: invalidCode,
+      message: `${name} must be a number between -${limit} and ${limit}`,
+    };
+  }
+
+  return { ok: true, value };
 }

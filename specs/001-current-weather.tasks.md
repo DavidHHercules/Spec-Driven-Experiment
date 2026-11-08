@@ -1,4 +1,4 @@
-# Tasks 001: Current Weather Endpoint
+☑ |# Tasks 001: Current Weather Endpoint
 
 - **Implements:** [Spec 001](001-current-weather.md) via [Plan 001](001-current-weather.plan.md)
 - **Created:** 2026-11-07
@@ -73,18 +73,18 @@ Install `@azure/functions` (dependency) and `typescript`, `vitest`, `@types/node
 `validateQuery(q: URLSearchParams)` per plan §5.
 
 **Tests first** — name each test with its rule ID:
-- [ ] R2: no `lat` → `MISSING_LAT`
-- [ ] R3: no `lon` → `MISSING_LON`
-- [ ] R4: `lat=abc`, `lat=` → `INVALID_LAT`
-- [ ] R5: `lon=abc`, `lon=` → `INVALID_LON`
-- [ ] R6: `lat=90.0001`, `lat=-91` → `INVALID_LAT`; `lat=90`, `lat=-90` → ok
-- [ ] R7: `lon=180.5`, `lon=-181` → `INVALID_LON`; `lon=180`, `lon=-180` → ok
-- [ ] R8: both missing → `MISSING_LAT`; `lat=abc&lon=abc` → `INVALID_LAT`; `lat=1` + no lon → `MISSING_LON`
-- [ ] R19: `lat=1&lon=2&foo=bar` → ok, same result as without `foo`
-- [ ] R21: `lat=1&lat=50&lon=2` → lat is 1; `lat=1&lat=abc&lon=2` → ok
+- [x] R2: no `lat` → `MISSING_LAT`
+- [x] R3: no `lon` → `MISSING_LON`
+- [x] R4: `lat=abc`, `lat=` → `INVALID_LAT`
+- [x] R5: `lon=abc`, `lon=` → `INVALID_LON`
+- [x] R6: `lat=90.0001`, `lat=-91` → `INVALID_LAT`; `lat=90`, `lat=-90` → ok
+- [x] R7: `lon=180.5`, `lon=-181` → `INVALID_LON`; `lon=180`, `lon=-180` → ok
+- [x] R8: both missing → `MISSING_LAT`; `lat=abc&lon=abc` → `INVALID_LAT`; `lat=1` + no lon → `MISSING_LON`
+- [x] R19: `lat=1&lon=2&foo=bar` → ok, same result as without `foo`
+- [x] R21: `lat=1&lat=50&lon=2` → lat is 1; `lat=1&lat=abc&lon=2` → ok
 
 **Done when**
-- [ ] All tests above pass.
+- [x] All tests above pass.
 
 ## T5 — Weather code mapping
 
