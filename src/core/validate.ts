@@ -6,6 +6,10 @@ export type ValidationResult =
 
 type FieldResult = { ok: true; value: number } | { ok: false; code: ErrorCode; message: string };
 
+/** Spec 001 R6, R7: valid ranges are -LIMIT..LIMIT inclusive. */
+export const LAT_LIMIT = 90;
+export const LON_LIMIT = 180;
+
 /** Spec §4.1: optional '-', digits, optional '.' followed by digits. */
 const COORDINATE_FORMAT = /^-?\d+(\.\d+)?$/;
 
@@ -30,10 +34,10 @@ export function parseCoordinate(raw: string): number | null {
  * `lat` is fully checked before `lon`, and only the first problem is reported (R8).
  */
 export function validateQuery(q: URLSearchParams): ValidationResult {
-  const lat = checkField(q, 'lat', 90, 'MISSING_LAT', 'INVALID_LAT');
+  const lat = checkField(q, 'lat', LAT_LIMIT, 'MISSING_LAT', 'INVALID_LAT');
   if (!lat.ok) return lat;
 
-  const lon = checkField(q, 'lon', 180, 'MISSING_LON', 'INVALID_LON');
+  const lon = checkField(q, 'lon', LON_LIMIT, 'MISSING_LON', 'INVALID_LON');
   if (!lon.ok) return lon;
 
   return { ok: true, lat: lat.value, lon: lon.value };

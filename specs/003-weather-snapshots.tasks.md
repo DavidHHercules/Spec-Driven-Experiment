@@ -11,7 +11,7 @@ T23 is a refactor: **no test assertions may change.**
 | Task | Title | Rules | Status |
 |------|-------|-------|--------|
 | T23 | Refactor: extract `getCurrentWeather` | N7 | ☑ |
-| T24 | `parseLocations` | R36–R40, F6 | ☐ |
+| T24 | `parseLocations` | R36–R40, F6 | ☑ |
 | T25 | Fakes: `fakeFetchByLat`, `fakeStore` | N8 | ☐ |
 | T26 | `runSnapshots` — success path | R34, R39, R41–R44, R48 | ☐ |
 | T27 | `runSnapshots` — failures and late runs | R35, R45–R48 | ☐ |
@@ -33,15 +33,15 @@ Move config-aware fetch-with-retries out of `handleWeatherRequest` into
 ## T24 — `parseLocations`
 
 **Tests first** (`locations.test.ts`):
-- [ ] R36: spec example parses to two locations; whitespace ignored; trailing `;` ignored.
-- [ ] R37: id rules — `a`, `new-york`, 32 chars ok; uppercase, `_`, space, 33 chars, empty → invalid.
-- [ ] R37: coordinate rules reuse §4.1 + ranges (`1e1`, `91`, `-181` → invalid).
-- [ ] R37: malformed entries (`seattle`, `seattle=47.6`, `=1,2`, `a=1,2,3`) → invalid.
-- [ ] R38: invalid entry skipped with a warning quoting it; others kept; `skipped` counted.
-- [ ] R38: duplicate valid id → later one skipped with warning.
-- [ ] F6: `a=bad; a=1,2` → second entry used.
-- [ ] R39: unset / empty / whitespace → no locations, no warnings (caller warns).
-- [ ] R40: 12 valid → first 10 kept, one warning, `skipped` = 2.
+- [x] R36: spec example parses to two locations; whitespace ignored; trailing `;` ignored.
+- [x] R37: id rules — `a`, `new-york`, 32 chars ok; uppercase, `_`, space, 33 chars, empty → invalid.
+- [x] R37: coordinate rules reuse §4.1 + ranges (`1e1`, `91`, `-181` → invalid).
+- [x] R37: malformed entries (`seattle`, `seattle=47.6`, `=1,2`, `a=1,2,3`) → invalid.
+- [x] R38: invalid entry skipped with a warning quoting it; others kept; `skipped` counted.
+- [x] R38: duplicate valid id → later one skipped with warning.
+- [x] F6: `a=bad; a=1,2` → second entry used.
+- [x] R39: unset / empty / whitespace → no locations, no warnings (caller warns).
+- [x] R40: 12 valid → first 10 kept, one warning, `skipped` = 2.
 
 ## T25 — Fakes
 
