@@ -245,3 +245,96 @@ describe('handleWeatherRequest — configuration warnings on every invocation', 
     expect(logs.warn.join('\n')).toContain('UPSTREAM_MAX_ATTEMPTS');
   });
 });
+
+describe('handleWeatherRequest — retries (spec 002)', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  /** makeDeps with retries enabled and the clock following fake timers. */
+  function retryDeps(fetch: Parameters<typeof makeDeps>[0]['fetch'], maxAttempts = '3') {
+    const made = makeDeps({ fetch });
+    made.deps.settings = { ...made.deps.settings, UPSTREAM_MAX_ATTEMPTS: maxAttempts };
+    made.deps.now = () => new Date();
+    return made;
+  }
+
+  async function run(deps: Parameters<typeof handleWeatherRequest>[1], query = 'lat=1&lon=2') {
+    const p = handleWeatherRequest(q(query), deps);
+    await vi.runAllTimersAsync();
+    return p;
+  }
+
+  it('R28: 503 then 200 → 200 after 2 calls', async () => {
+    const { deps, calls } = retryDeps([{ status: 503, text: '' }, { status: 200, json: upstreamBody() }]);
+    const res = await run(deps);
+    expect(res.status).toBe(200);
+    expect(calls).toHaveLength(2);
+  });
+
+  it('R29: 503 ×3 → 502 UPSTREAM_ERROR after 3 calls', async () => {
+    const step = { status: 503, text: '' };
+    const { deps, calls } = retryDeps([step, step, step]);
+    const res = await run(deps);
+    expect(res.status).toBe(502);
+    expect(res.body).toMatchObject({ error: { code: 'UPSTREAM_ERROR' } });
+    expect(calls).toHaveLength(3);
+  });
+
+  it('R29/R24: timeout ×3 → 504 UPSTREAM_TIMEOUT; every attempt aborted', async () => {
+    const { deps, calls } = retryDeps([{ hang: true }, { hang: true }, { hang: true }]);
+    const res = await run(deps);
+    expect(res.status).toBe(504);
+    expect(res.body).toMatchObject({ error: { code: 'UPSTREAM_TIMEOUT' } });
+    expect(calls.map((c) => c.aborted)).toEqual([true, true, true]);
+  });
+
+  it('R29: timeout, timeout, 503 → last wins → 502', async () => {
+    const { deps } = retryDeps([{ hang: true }, { hang: true }, { status: 503, text: '' }]);
+    const res = await run(deps);
+    expect(res.status).toBe(502);
+    expect(res.body).toMatchObject({ error: { code: 'UPSTREAM_ERROR' } });
+  });
+
+  it('R23: worst case with defaults is 6750 ms', async () => {
+    const { deps } = retryDeps([{ hang: true }, { hang: true }, { hang: true }]);
+    const t0 = Date.now();
+    await run(deps);
+    expect(Date.now() - t0).toBe(6750);
+  });
+
+  it('R26: 429 → 502 after exactly 1 call, even with 3 attempts allowed', async () => {
+    const { deps, calls } = retryDeps([{ status: 429, text: 'rate limited' }, { status: 200, json: upstreamBody() }]);
+    const res = await run(deps);
+    expect(res.status).toBe(502);
+    expect(calls).toHaveLength(1);
+  });
+
+  it('R26: bad response → 502 UPSTREAM_BAD_RESPONSE after exactly 1 call', async () => {
+    const { deps, calls } = retryDeps([{ status: 200, text: 'nope' }, { status: 200, json: upstreamBody() }]);
+    const res = await run(deps);
+    expect(res.body).toMatchObject({ error: { code: 'UPSTREAM_BAD_RESPONSE' } });
+    expect(calls).toHaveLength(1);
+  });
+
+  it('R31: success log includes attempts=2 and upstreamMs spanning both attempts and the backoff', async () => {
+    const { deps, logs } = retryDeps([{ status: 503, text: '' }, { status: 200, json: upstreamBody() }]);
+    await run(deps, 'lat=47.6&lon=-122.3');
+    expect(logs.info).toHaveLength(1);
+    expect(logs.info[0]).toMatch(/weather ok lat=47.6 lon=-122.3 attempts=2 upstreamMs=250\b/);
+  });
+
+  it('R30: failed attempts are logged with lat/lon context', async () => {
+    const { deps, logs } = retryDeps([{ status: 503, text: '' }, { status: 200, json: upstreamBody() }]);
+    await run(deps, 'lat=47.6&lon=-122.3');
+    expect(logs.error).toEqual([
+      expect.stringMatching(/lat=47.6 lon=-122.3 .*attempt 1\/3 failed: status 503 .*retrying in 250ms/),
+    ]);
+  });
+
+  it('R32: UPSTREAM_MAX_ATTEMPTS=2 → at most 2 calls', async () => {
+    const step = { status: 503, text: '' };
+    const { deps, calls } = retryDeps([step, step, step], '2');
+    await run(deps);
+    expect(calls).toHaveLength(2);
+  });
+});

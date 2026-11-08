@@ -1,7 +1,8 @@
 import { resolveResilienceConfig } from './config';
 import { errorBody } from './errors';
-import { describeOutcome, fetchAttemptOnce } from './fetchAttempt';
+import { fetchAttemptOnce } from './fetchAttempt';
 import { buildForecastUrl, resolveBaseUrl } from './openMeteo';
+import { runWithRetries } from './retry';
 import type { AttemptOutcome, CoreResponse, Deps } from './types';
 import { validateQuery } from './validate';
 import { describeWeatherCode } from './weatherCodes';
@@ -24,18 +25,23 @@ export async function handleWeatherRequest(q: URLSearchParams, deps: Deps): Prom
   const { lat, lon } = input;
   const url = buildForecastUrl(resolveBaseUrl(deps.settings['OPEN_METEO_BASE_URL']), lat, lon);
 
+  // R22–R30: attempts with timeout, retried with backoff. Each failed attempt is logged
+  // with its detail (R18, R30); the response only ever carries a generic message.
   const startedAt = deps.now();
-  const outcome = await fetchAttemptOnce(deps.fetch, url, config.timeoutMs);
+  const { outcome, attempts } = await runWithRetries(
+    () => fetchAttemptOnce(deps.fetch, url, config.timeoutMs),
+    config.maxAttempts,
+    (msg) => deps.log.error(`weather upstream lat=${lat} lon=${lon} ${msg}`),
+  );
   const finishedAt = deps.now();
 
   if (outcome.kind !== 'ok') {
-    deps.log.error(`weather upstream failed lat=${lat} lon=${lon}: ${describeOutcome(outcome)}`); // R18
-    return failureResponse(outcome);
+    return failureResponse(outcome); // R29: last attempt decides
   }
 
-  // N3
+  // N3 + R31: upstreamMs spans all attempts and backoffs.
   deps.log.info(
-    `weather ok lat=${lat} lon=${lon} upstreamMs=${finishedAt.getTime() - startedAt.getTime()}`,
+    `weather ok lat=${lat} lon=${lon} attempts=${attempts} upstreamMs=${finishedAt.getTime() - startedAt.getTime()}`,
   );
 
   // R1, R12, R13

@@ -19,7 +19,7 @@ only test *setup* (and only where the refactor forces it).
 | T17 | Attempt timeout + abort | R22, R24, N6 | ☑ |
 | T18 | Resilience config | R32, R33, N5 | ☑ |
 | T19 | Retry loop | R25–R27, R29, R30 | ☑ |
-| T20 | Wire retries into the handler | R28, R29, R31 | ☐ |
+| T20 | Wire retries into the handler | R28, R29, R31 | ☑ |
 | T21 | Adapter + local acceptance | R22, R24, R33, §9 | ☐ |
 | T22 | Acceptance review | §9 | ☐ |
 
@@ -87,11 +87,11 @@ Per plan §6: `{ hang: true }`, `{ status, hangBody: true }`, calls recorded as 
 ## T20 — Wire retries into the handler
 
 **Tests first** (`handleWeatherRequest.test.ts`):
-- [ ] R28: 503 then 200 → 200, 2 fetch calls.
-- [ ] R29: 503 ×3 → 502 `UPSTREAM_ERROR`; timeout ×3 → 504; timeout, timeout, 503 → 502.
-- [ ] R26: 429 → 502 after exactly 1 call, even with max attempts 3.
-- [ ] R31: success log includes `attempts=2` and `upstreamMs` spanning both attempts and the backoff.
-- [ ] Settings flow through: `UPSTREAM_MAX_ATTEMPTS='2'` → at most 2 calls.
+- [x] R28: 503 then 200 → 200, 2 fetch calls.
+- [x] R29: 503 ×3 → 502 `UPSTREAM_ERROR`; timeout ×3 → 504; timeout, timeout, 503 → 502.
+- [x] R26: 429 → 502 after exactly 1 call, even with max attempts 3.
+- [x] R31: success log includes `attempts=2` and `upstreamMs` spanning both attempts and the backoff.
+- [x] Settings flow through: `UPSTREAM_MAX_ATTEMPTS='2'` → at most 2 calls.
 
 ## T21 — Adapter + local acceptance
 
