@@ -7,19 +7,34 @@ const LOG_SNIPPET_LENGTH = 500;
 /**
  * Makes ONE request to Open-Meteo and classifies the result. Never throws:
  * every way an attempt can end is an AttemptOutcome.
+ *
+ * R22: one AbortController covers both the request and the body read, so the timeout
+ * applies to the whole attempt. N6: on timeout the request is aborted, not abandoned.
+ * Uses setTimeout rather than AbortSignal.timeout() so tests can control it with fake timers.
  */
 export async function fetchAttemptOnce(
   fetchFn: typeof globalThis.fetch,
   url: string,
+  timeoutMs: number,
 ): Promise<AttemptOutcome> {
+  const controller = new AbortController();
+  let timedOut = false;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
+
   let res: Response;
   let text: string;
   try {
-    res = await fetchFn(url);
+    res = await fetchFn(url, { signal: controller.signal });
     // Read the body as text once, so it can be both parsed and logged.
     text = await res.text();
   } catch (err) {
-    return { kind: 'network', detail: describeError(err) };
+    // F4: any failure that isn't our timeout — including mid-body — is a network failure.
+    return timedOut ? { kind: 'timeout', timeoutMs } : { kind: 'network', detail: describeError(err) };
+  } finally {
+    clearTimeout(timer);
   }
 
   if (!res.ok) {

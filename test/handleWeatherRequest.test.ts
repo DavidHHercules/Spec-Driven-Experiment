@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { handleWeatherRequest } from '../src/core/handleWeatherRequest';
 import { makeDeps, upstreamBody } from './helpers/fakes';
 
@@ -188,5 +188,22 @@ describe('handleWeatherRequest — failure paths', () => {
     await handleWeatherRequest(q('lat=1&lon=2'), deps);
 
     expect(logs.info).toHaveLength(0);
+  });
+});
+
+describe('handleWeatherRequest — timeouts (spec 002)', () => {
+  beforeEach(() => vi.useFakeTimers());
+  afterEach(() => vi.useRealTimers());
+
+  it('R24: final outcome timeout → 504 UPSTREAM_TIMEOUT, detail only in logs', async () => {
+    const { deps, logs } = makeDeps({ fetch: [{ hang: true }] });
+
+    const p = handleWeatherRequest(q('lat=1&lon=2'), deps);
+    await vi.advanceTimersByTimeAsync(2000);
+    const res = await p;
+
+    expect(res.status).toBe(504);
+    expect(res.body).toMatchObject({ error: { code: 'UPSTREAM_TIMEOUT' } });
+    expect(logs.error.join('\n')).toContain('timeout after 2000ms');
   });
 });

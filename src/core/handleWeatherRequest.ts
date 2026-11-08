@@ -20,7 +20,7 @@ export async function handleWeatherRequest(q: URLSearchParams, deps: Deps): Prom
   const url = buildForecastUrl(resolveBaseUrl(deps.settings['OPEN_METEO_BASE_URL']), lat, lon);
 
   const startedAt = deps.now();
-  const outcome = await fetchAttemptOnce(deps.fetch, url);
+  const outcome = await fetchAttemptOnce(deps.fetch, url, 2000); // T18 makes this configurable
   const finishedAt = deps.now();
 
   if (outcome.kind !== 'ok') {
@@ -52,9 +52,10 @@ export async function handleWeatherRequest(q: URLSearchParams, deps: Deps): Prom
 /** Final outcome → client-safe response. Details stay in the logs (R18). */
 function failureResponse(outcome: Exclude<AttemptOutcome, { kind: 'ok' }>): CoreResponse {
   switch (outcome.kind) {
+    case 'timeout': // R24
+      return { status: 504, body: errorBody('UPSTREAM_TIMEOUT', 'The weather provider did not respond in time.') };
     case 'network': // R16
     case 'status': // R15
-    case 'timeout': // placeholder until T17 (R24)
       return { status: 502, body: errorBody('UPSTREAM_ERROR', 'The weather provider is unavailable.') };
     case 'bad-response': // R17
       return {

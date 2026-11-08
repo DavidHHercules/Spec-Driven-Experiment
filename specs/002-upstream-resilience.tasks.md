@@ -16,7 +16,7 @@ only test *setup* (and only where the refactor forces it).
 | T14 | Refactor: `Deps.settings` + `log.warn` | — | ☑ |
 | T15 | Refactor: extract `fetchAttemptOnce` | — | ☑ |
 | T16 | Fake fetch upgrades | N4, N6 | ☑ |
-| T17 | Attempt timeout + abort | R22, R24, N6 | ☐ |
+| T17 | Attempt timeout + abort | R22, R24, N6 | ☑ |
 | T18 | Resilience config | R32, R33, N5 | ☐ |
 | T19 | Retry loop | R25–R27, R29, R30 | ☐ |
 | T20 | Wire retries into the handler | R28, R29, R31 | ☐ |
@@ -56,13 +56,13 @@ Per plan §6: `{ hang: true }`, `{ status, hangBody: true }`, calls recorded as 
 ## T17 — Attempt timeout + abort
 
 **Tests first** (`fetchAttempt.test.ts`, fake timers):
-- [ ] R22: hanging fetch → `timeout` outcome exactly at the timeout, not before (advance `t−1` → pending; `+1` → settled).
-- [ ] R22: headers arrive but body hangs → `timeout` (timeout covers body read).
-- [ ] N6: the hanging request's signal was aborted.
-- [ ] Fast success → `ok`; no timers left pending afterwards (`vi.getTimerCount() === 0`).
-- [ ] Classification: network error → `network`; 503 → `status`; bad JSON / bad shape → `bad-response`.
-- [ ] F4: body stream errors mid-read (not timeout) → `network`.
-- [ ] R24 (handler): timeout outcome → `504 UPSTREAM_TIMEOUT`.
+- [x] R22: hanging fetch → `timeout` outcome exactly at the timeout, not before (advance `t−1` → pending; `+1` → settled).
+- [x] R22: headers arrive but body hangs → `timeout` (timeout covers body read).
+- [x] N6: the hanging request's signal was aborted.
+- [x] Fast success → `ok`; no timers left pending afterwards (`vi.getTimerCount() === 0`).
+- [x] Classification: network error → `network`; 503 → `status`; bad JSON / bad shape → `bad-response`.
+- [x] F4: body stream errors mid-read (not timeout) → `network`.
+- [x] R24 (handler): timeout outcome → `504 UPSTREAM_TIMEOUT`.
 
 ## T18 — Resilience config
 

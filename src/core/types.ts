@@ -5,7 +5,8 @@ export type ErrorCode =
   | 'INVALID_LAT'
   | 'INVALID_LON'
   | 'UPSTREAM_ERROR'
-  | 'UPSTREAM_BAD_RESPONSE';
+  | 'UPSTREAM_BAD_RESPONSE'
+  | 'UPSTREAM_TIMEOUT';
 
 /** Success response body (spec §3). */
 export interface WeatherSummary {
@@ -25,7 +26,7 @@ export interface ErrorBody {
 
 /** What the core returns; the Azure adapter turns this into an HTTP response. */
 export interface CoreResponse {
-  status: 200 | 400 | 502;
+  status: 200 | 400 | 502 | 504;
   body: WeatherSummary | ErrorBody;
 }
 
