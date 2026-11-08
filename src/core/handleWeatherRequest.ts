@@ -1,24 +1,12 @@
 import { errorBody } from './errors';
-import { buildForecastUrl, parseCurrent, resolveBaseUrl } from './openMeteo';
-import type { CoreResponse, Deps } from './types';
+import { fetchAttemptOnce } from './fetchAttempt';
+import { buildForecastUrl, resolveBaseUrl } from './openMeteo';
+import type { AttemptOutcome, CoreResponse, Deps } from './types';
 import { validateQuery } from './validate';
 import { describeWeatherCode } from './weatherCodes';
 
-/** Max characters of an upstream body copied into a log line. */
-const LOG_SNIPPET_LENGTH = 500;
-
-// Generic, client-safe messages. Details go to the log only (R18).
-const UPSTREAM_ERROR = (): CoreResponse => ({
-  status: 502,
-  body: errorBody('UPSTREAM_ERROR', 'The weather provider is unavailable.'),
-});
-const UPSTREAM_BAD_RESPONSE = (): CoreResponse => ({
-  status: 502,
-  body: errorBody('UPSTREAM_BAD_RESPONSE', 'The weather provider returned an unexpected response.'),
-});
-
 /**
- * Core of the weather endpoint (spec 001). Knows nothing about Azure (N2);
+ * Core of the weather endpoint (specs 001, 002). Knows nothing about Azure (N2);
  * everything non-deterministic comes in through `deps` (N1).
  */
 export async function handleWeatherRequest(q: URLSearchParams, deps: Deps): Promise<CoreResponse> {
@@ -31,79 +19,61 @@ export async function handleWeatherRequest(q: URLSearchParams, deps: Deps): Prom
   const { lat, lon } = input;
   const url = buildForecastUrl(resolveBaseUrl(deps.settings['OPEN_METEO_BASE_URL']), lat, lon);
 
-  // R10, R16: a rejected fetch is a network-level failure.
   const startedAt = deps.now();
-  let res: Response;
-  try {
-    res = await deps.fetch(url);
-  } catch (err) {
-    deps.log.error(`weather upstream network error lat=${lat} lon=${lon}: ${describeError(err)}`);
-    return UPSTREAM_ERROR();
-  }
-  const receivedAt = deps.now();
+  const outcome = await fetchAttemptOnce(deps.fetch, url);
+  const finishedAt = deps.now();
 
-  // Read the body as text once, so it can be both parsed and logged.
-  let text: string;
-  try {
-    text = await res.text();
-  } catch (err) {
-    deps.log.error(`weather upstream body read failed status=${res.status}: ${describeError(err)}`);
-    return UPSTREAM_ERROR();
-  }
-
-  // R15: non-2xx.
-  if (!res.ok) {
-    deps.log.error(`weather upstream status=${res.status} body=${snippet(text)}`);
-    return UPSTREAM_ERROR();
-  }
-
-  // R17: invalid JSON.
-  let json: unknown;
-  try {
-    json = JSON.parse(text);
-  } catch {
-    deps.log.error(`weather upstream invalid JSON body=${snippet(text)}`);
-    return UPSTREAM_BAD_RESPONSE();
-  }
-
-  // R17: wrong shape.
-  const parsed = parseCurrent(json);
-  if (!parsed.ok) {
-    deps.log.error(`weather upstream bad response: ${parsed.reason}`);
-    return UPSTREAM_BAD_RESPONSE();
+  if (outcome.kind !== 'ok') {
+    deps.log.error(`weather upstream failed lat=${lat} lon=${lon}: ${describeOutcome(outcome)}`); // R18
+    return failureResponse(outcome);
   }
 
   // N3
   deps.log.info(
-    `weather ok lat=${lat} lon=${lon} upstreamMs=${receivedAt.getTime() - startedAt.getTime()}`,
+    `weather ok lat=${lat} lon=${lon} upstreamMs=${finishedAt.getTime() - startedAt.getTime()}`,
   );
 
   // R1, R12, R13
+  const data = outcome.data;
   return {
     status: 200,
     body: {
       location: { lat, lon },
-      tempC: parsed.tempC,
-      windKph: parsed.windKph,
-      condition: describeWeatherCode(parsed.weatherCode),
-      weatherCode: parsed.weatherCode,
-      observedAt: parsed.observedAt,
-      fetchedAt: receivedAt.toISOString(),
+      tempC: data.tempC,
+      windKph: data.windKph,
+      condition: describeWeatherCode(data.weatherCode),
+      weatherCode: data.weatherCode,
+      observedAt: data.observedAt,
+      fetchedAt: finishedAt.toISOString(),
     },
   };
 }
 
-/**
- * Formats an error for logging, including its `cause` chain. Node's fetch throws a
- * generic "TypeError: fetch failed" and puts the real reason (ECONNREFUSED, DNS
- * failure, TLS error…) in `cause` — without this, R18's "details are logged" is hollow.
- */
-function describeError(err: unknown): string {
-  if (!(err instanceof Error)) return String(err);
-  const own = `${err.name}: ${err.message}`;
-  return err.cause === undefined ? own : `${own} (cause: ${describeError(err.cause)})`;
+/** Final outcome → client-safe response. Details stay in the logs (R18). */
+function failureResponse(outcome: Exclude<AttemptOutcome, { kind: 'ok' }>): CoreResponse {
+  switch (outcome.kind) {
+    case 'network': // R16
+    case 'status': // R15
+    case 'timeout': // placeholder until T17 (R24)
+      return { status: 502, body: errorBody('UPSTREAM_ERROR', 'The weather provider is unavailable.') };
+    case 'bad-response': // R17
+      return {
+        status: 502,
+        body: errorBody('UPSTREAM_BAD_RESPONSE', 'The weather provider returned an unexpected response.'),
+      };
+  }
 }
 
-function snippet(text: string): string {
-  return JSON.stringify(text.slice(0, LOG_SNIPPET_LENGTH));
+/** One-line description of a failed attempt, for logs. */
+export function describeOutcome(outcome: Exclude<AttemptOutcome, { kind: 'ok' }>): string {
+  switch (outcome.kind) {
+    case 'network':
+      return `network ${outcome.detail}`;
+    case 'timeout':
+      return `timeout after ${outcome.timeoutMs}ms`;
+    case 'status':
+      return `status ${outcome.status} ${outcome.detail}`;
+    case 'bad-response':
+      return `bad response ${outcome.detail}`;
+  }
 }

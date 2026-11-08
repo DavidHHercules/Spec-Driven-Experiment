@@ -14,7 +14,7 @@ only test *setup* (and only where the refactor forces it).
 | Task | Title | Rules | Status |
 |------|-------|-------|--------|
 | T14 | Refactor: `Deps.settings` + `log.warn` | — | ☑ |
-| T15 | Refactor: extract `fetchAttemptOnce` | — | ☐ |
+| T15 | Refactor: extract `fetchAttemptOnce` | — | ☑ |
 | T16 | Fake fetch upgrades | N4, N6 | ☐ |
 | T17 | Attempt timeout + abort | R22, R24, N6 | ☐ |
 | T18 | Resilience config | R32, R33, N5 | ☐ |
@@ -42,8 +42,8 @@ from `handleWeatherRequest` into `src/core/fetchAttempt.ts`. Handler maps outcom
 and logs. No timeout yet.
 
 **Done when**
-- [ ] All existing tests pass with no assertion changes.
-- [ ] `handleWeatherRequest` contains no `fetch`, `text()` or `JSON.parse` calls.
+- [x] All existing tests pass with no assertion changes.
+- [x] `handleWeatherRequest` contains no `fetch`, `text()` or `JSON.parse` calls.
 
 ## T16 — Fake fetch upgrades
 

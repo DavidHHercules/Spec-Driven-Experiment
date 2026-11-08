@@ -37,3 +37,19 @@ export interface Deps {
   settings: Readonly<Record<string, string | undefined>>;
   log: { info(msg: string): void; warn(msg: string): void; error(msg: string): void };
 }
+
+/** The weather fields we use from one successful upstream response (spec 001 R12). */
+export interface CurrentWeather {
+  tempC: number;
+  windKph: number;
+  weatherCode: number;
+  observedAt: string;
+}
+
+/** Result of ONE upstream attempt. Always returned, never thrown (plan 002 §4). */
+export type AttemptOutcome =
+  | { kind: 'ok'; data: CurrentWeather }
+  | { kind: 'timeout'; timeoutMs: number }
+  | { kind: 'network'; detail: string }
+  | { kind: 'status'; status: number; detail: string }
+  | { kind: 'bad-response'; detail: string };
