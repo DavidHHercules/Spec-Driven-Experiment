@@ -1,9 +1,10 @@
 # Spec 001: Current Weather Endpoint
 
-- **Status:** Approved
+- **Status:** Implemented
 - **Author:** David Hercules
 - **Created:** 2026-11-07
 - **Approved:** 2026-11-07
+- **Implemented:** 2026-11-08
 
 ## 1. Goal
 
@@ -177,10 +178,10 @@ digits, optionally followed by `.` and one or more digits.
 
 ## 7. Acceptance criteria
 
-- [ ] Every rule R1–R21 has at least one automated test (R20 is intentionally untested).
-- [ ] Every row of the §4.1 table has a test.
-- [ ] `func start` runs locally and `GET /api/weather?lat=47.6&lon=-122.3` returns a real `200` response.
-- [ ] `GET /api/weather?lat=999&lon=0` returns `400` / `INVALID_LAT`.
+- [x] Every rule R1–R21 has at least one automated test (R20 is intentionally untested).
+- [x] Every row of the §4.1 table has a test.
+- [x] `func start` runs locally and `GET /api/weather?lat=47.6&lon=-122.3` returns a real `200` response.
+- [x] `GET /api/weather?lat=999&lon=0` returns `400` / `INVALID_LAT`.
 
 ## 8. Decisions
 
@@ -250,3 +251,4 @@ reasoning survives even if the people who made it are gone.
 | 2026-11-07 | Draft created. |
 | 2026-11-07 | Review: resolved open questions as D1–D5; added R19, R20, §4.1; tightened R4, R5, R10, R14, R17. Status → Approved. |
 | 2026-11-07 | Amendment from planning feedback (plan §9 F1–F3): added R21 / D6 (duplicate params), clarified R11 / D7 (empty and trailing-slash base URL). |
+| 2026-11-08 | Implemented (tasks T1–T13). All acceptance criteria met; no behavior changes from the approved spec. Status → Implemented. |

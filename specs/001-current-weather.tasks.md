@@ -1,4 +1,4 @@
-☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
+☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
 
 - **Implements:** [Spec 001](001-current-weather.md) via [Plan 001](001-current-weather.plan.md)
 - **Created:** 2026-11-07
@@ -191,15 +191,15 @@ Prerequisite: `winget install Microsoft.Azure.FunctionsCoreTools`, then copy
 - [x] With `OPEN_METEO_BASE_URL` pointed at a bad host → 502 `UPSTREAM_ERROR`, detail visible in the `func` console only.
 - [x] Console shows the N3 success log line.
 
-> **Finding (2026-11-08):** the bad-host check logged only .
-> Node's fetch hides the real reason in . Fixed (test-first) so logs include the
+> **Finding (2026-11-08):** the bad-host check logged only `TypeError: fetch failed`.
+> Node's fetch hides the real reason in `err.cause`. Fixed (test-first) so logs include the
 > cause chain. Not a spec change — it makes R18 ("details are logged") actually true.
 
 ## T13 — Acceptance review
 
 **Done when**
-- [ ] Every rule R1–R21 (except R20) has a test whose name starts with its ID.
+- [x] Every rule R1–R21 (except R20) has a test whose name starts with its ID.
       Check with `npx vitest run -t R<n>` for each.
-- [ ] Every spec §7 checkbox is ticked.
-- [ ] No spec gaps left unrecorded; any found during implementation are in the spec changelog.
-- [ ] README spec table: 001 → **Done**.
+- [x] Every spec §7 checkbox is ticked.
+- [x] No spec gaps left unrecorded; any found during implementation are in the spec changelog.
+- [x] README spec table: 001 → **Done**.

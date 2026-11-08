@@ -18,7 +18,7 @@ Every change follows the same loop. No code is written until its spec is approve
 
 | ID  | Title                     | Status |
 |-----|---------------------------|--------|
-| 001 | Current weather endpoint ([spec](specs/001-current-weather.md), [plan](specs/001-current-weather.plan.md), [tasks](specs/001-current-weather.tasks.md)) | Ready to implement |
+| 001 | Current weather endpoint ([spec](specs/001-current-weather.md), [plan](specs/001-current-weather.plan.md), [tasks](specs/001-current-weather.tasks.md)) | ✅ Done |
 | 002 | Error handling & resilience | Planned |
 | 003 | Timer-triggered snapshots | Planned |
 | 004 | Deploy to Azure           | Planned |
