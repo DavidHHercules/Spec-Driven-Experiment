@@ -1,9 +1,10 @@
 # Spec 002: Upstream Resilience — Timeouts & Retries
 
-- **Status:** Approved
+- **Status:** Implemented
 - **Author:** David Hercules
 - **Created:** 2026-11-08
 - **Approved:** 2026-11-08
+- **Implemented:** 2026-11-08
 - **Amends:** [Spec 001](001-current-weather.md) — R15, R16, N3 (see §6)
 
 ## 1. Goal
@@ -177,11 +178,11 @@ Q1–Q7 from the draft map to D8–D14.
 
 ## 9. Acceptance criteria
 
-- [ ] Every rule R22–R33 has at least one automated test.
-- [ ] Full test suite runs in under 5 seconds (proves N4 — no real waiting).
-- [ ] Locally, with `OPEN_METEO_BASE_URL` pointing at a server that accepts connections but never responds, the endpoint returns `504 UPSTREAM_TIMEOUT` in 6.75–7.75 s with default settings.
-- [ ] Locally, with `UPSTREAM_TIMEOUT_MS=abc`, the endpoint still works and logs a warning naming the setting.
-- [ ] All Spec 001 tests still pass, except those deliberately updated per §6 (each update noted in the commit message).
+- [x] Every rule R22–R33 has at least one automated test.
+- [x] Full test suite runs in under 5 seconds (proves N4 — no real waiting).
+- [x] Locally, with `OPEN_METEO_BASE_URL` pointing at a server that accepts connections but never responds, the endpoint returns `504 UPSTREAM_TIMEOUT` in 6.75–7.75 s with default settings.
+- [x] Locally, with `UPSTREAM_TIMEOUT_MS=abc`, the endpoint still works and logs a warning naming the setting.
+- [x] All Spec 001 tests still pass, except those deliberately updated per §6 (each update noted in the commit message).
 
 ## 10. Changelog
 
@@ -190,3 +191,4 @@ Q1–Q7 from the draft map to D8–D14.
 | 2026-11-08 | Draft created with open questions Q1–Q7. |
 | 2026-11-08 | Review: resolved Q1–Q7 as D8–D14. Replaced placeholders; R23 rewritten from "total budget" to a derived bound; added R33 (invalid config). Status → Approved. |
 | 2026-11-08 | Amendment from planning feedback (plan §8): R25 clarifies mid-body connection drops are network failures (F4); R33 clarifies whitespace is trimmed (F5). |
+| 2026-11-08 | Implemented (tasks T14–T22). All acceptance criteria met: 504 in 6.97 s against a silent upstream; suite runs in 1.4 s. Status → Implemented. |

@@ -21,7 +21,7 @@ only test *setup* (and only where the refactor forces it).
 | T19 | Retry loop | R25–R27, R29, R30 | ☑ |
 | T20 | Wire retries into the handler | R28, R29, R31 | ☑ |
 | T21 | Adapter + local acceptance | R22, R24, R33, §9 | ☑ |
-| T22 | Acceptance review | §9 | ☐ |
+| T22 | Acceptance review | §9 | ☑ |
 
 ---
 
@@ -104,6 +104,6 @@ Add `scripts/never-respond-server.js` (accepts TCP connections, never replies).
 
 ## T22 — Acceptance review
 
-- [ ] Every rule R22–R33 has a test whose name starts with its ID.
-- [ ] `npm test` completes in < 5 s (N4).
-- [ ] Spec 002 §9 boxes ticked; statuses updated; README → Done.
+- [x] Every rule R22–R33 has a test whose name starts with its ID.
+- [x] `npm test` completes in < 5 s (N4).
+- [x] Spec 002 §9 boxes ticked; statuses updated; README → Done.
