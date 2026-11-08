@@ -15,7 +15,7 @@ T23 is a refactor: **no test assertions may change.**
 | T25 | Fakes: `fakeFetchByLat`, `fakeStore` | N8 | ☑ |
 | T26 | `runSnapshots` — success path | R34, R39, R41–R44, R48 | ☑ |
 | T27 | `runSnapshots` — failures and late runs | R35, R45–R48 | ☑ |
-| T28 | Table store, timer adapter, Azurite setup | R43, R44, N9 | ☐ |
+| T28 | Table store, timer adapter, Azurite setup | R43, R44, N9 | ☑ |
 | T29 | Local acceptance | §8 | ☐ |
 | T30 | Acceptance review | §8 | ☐ |
 
@@ -84,8 +84,8 @@ is observable; throws for listed location ids).
 - README: Azurite now required for `func start`.
 
 **Done when**
-- [ ] `snapshotToEntity` test: PartitionKey = id, RowKey = observedAt, all §5 fields present.
-- [ ] Build, typecheck, all tests pass; `@azure/data-tables` not imported anywhere in `src/core`.
+- [x] `snapshotToEntity` test: PartitionKey = id, RowKey = observedAt, all §5 fields present.
+- [x] Build, typecheck, all tests pass; `@azure/data-tables` not imported anywhere in `src/core`.
 
 ## T29 — Local acceptance (Azurite + `func start`)
 

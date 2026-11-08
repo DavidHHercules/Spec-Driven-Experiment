@@ -3,3 +3,4 @@ dist/
 coverage/
 *.log
 local.settings.json
+.azurite/

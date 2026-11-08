@@ -10,13 +10,16 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "prestart": "npm run build",
-    "start": "func start"
+    "start": "func start",
+    "azurite": "azurite --silent --location .azurite --skipApiVersionCheck"
   },
   "dependencies": {
+    "@azure/data-tables": "^13.3.2",
     "@azure/functions": "^4.17.0"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",
+    "azurite": "3.35.0",
     "typescript": "~5.9.3",
     "vitest": "^3.2.7"
   }

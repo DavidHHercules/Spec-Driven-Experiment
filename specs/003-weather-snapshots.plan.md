@@ -175,3 +175,7 @@ its own scripted sequence regardless of call order.
 - **Azurite + Node 20.** Pinned to 3.35.0; verified at T-acceptance.
 - **`UseDevelopmentStorage=true` support in `@azure/data-tables`.** Expected to work; verified at T-acceptance. Fallback: Azurite's explicit connection string.
 - **Host now needs Azurite to start.** A friction point for anyone only working on the HTTP function; documented in README.
+- **Azurite 3.35.0 dev-only vulnerabilities** *(found in T28)*: `npm audit` reports 17 issues in
+  Azurite's own dependency tree; production dependencies report **0**. Accepted: Azurite is a
+  local emulator, a devDependency, and never deployed. Resolved by upgrading Node and Azurite
+  together in Spec 004.

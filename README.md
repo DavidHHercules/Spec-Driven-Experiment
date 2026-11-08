@@ -25,5 +25,24 @@ Every change follows the same loop. No code is written until its spec is approve
 
 ## Prerequisites
 
-- Node.js 20+
+- Node.js 20+ (22 recommended — see Spec 004)
 - Azure Functions Core Tools v4 (`winget install Microsoft.Azure.FunctionsCoreTools`)
+
+## Running locally
+
+```sh
+npm install
+cp local.settings.example.json local.settings.json   # first time only
+
+npm test              # all tests; no network, no storage needed
+
+npm run azurite       # terminal 1 — Azure Storage emulator (required since Spec 003)
+npm start             # terminal 2 — builds, then `func start`
+```
+
+| Function | Trigger | Try it |
+|----------|---------|--------|
+| `weather` | HTTP GET | `curl "http://localhost:7071/api/weather?lat=47.6&lon=-122.3"` |
+| `snapshots` | Timer, every 30 min | Run now: `curl -X POST http://localhost:7071/admin/functions/snapshots -H "Content-Type: application/json" -d "{}"` |
+
+Snapshots are stored in the `weathersnapshots` table in Azurite (view with Azure Storage Explorer).

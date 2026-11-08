@@ -10,3 +10,4 @@ test
 tsconfig*.json
 vitest.config.ts
 scripts
+.azurite
