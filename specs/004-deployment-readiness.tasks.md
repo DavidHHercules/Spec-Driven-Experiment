@@ -10,7 +10,7 @@ Same rules: in order, one task = one commit, tests first where there is code.
 | Task | Title | Requirements | Status |
 |------|-------|--------------|--------|
 | T31 | Storage target selection + identity path | R54, R55 | ☑ |
-| T32 | Bicep infrastructure | R49–R53, R56 | ☐ |
+| T32 | Bicep infrastructure | R49–R53, R56 | ☑ |
 | T33 | Deployment package script + check | R61 | ☐ |
 | T34 | CI workflow | R58, N11, N12 | ☐ |
 | T35 | Deploy workflow | R59 | ☐ |
@@ -33,9 +33,9 @@ Same rules: in order, one task = one commit, tests first where there is code.
 ## T32 — Bicep infrastructure
 
 **Done when**
-- [ ] `infra/main.bicep` and `infra/main.bicepparam` per plan §3.
-- [ ] `bicep build` and `bicep lint`: zero errors, zero warnings.
-- [ ] Compiled template has exactly the R56 app settings, `allowSharedKeyAccess: false`, 3 role assignments.
+- [x] `infra/main.bicep` and `infra/main.bicepparam` per plan §3.
+- [x] `bicep build` and `bicep lint`: zero errors, zero warnings.
+- [x] Compiled template has exactly the R56 app settings, `allowSharedKeyAccess: false`, 3 role assignments.
 
 ## T33 — Deployment package script + check
 

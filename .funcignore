@@ -11,3 +11,7 @@ tsconfig*.json
 vitest.config.ts
 scripts
 .azurite
+infra
+docs
+.github
+.deploy
