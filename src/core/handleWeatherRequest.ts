@@ -1,8 +1,6 @@
 import { resolveResilienceConfig } from './config';
 import { errorBody } from './errors';
-import { fetchAttemptOnce } from './fetchAttempt';
-import { buildForecastUrl, resolveBaseUrl } from './openMeteo';
-import { runWithRetries } from './retry';
+import { getCurrentWeather } from './getCurrentWeather';
 import type { AttemptOutcome, CoreResponse, Deps } from './types';
 import { validateQuery } from './validate';
 import { describeWeatherCode } from './weatherCodes';
@@ -23,17 +21,16 @@ export async function handleWeatherRequest(q: URLSearchParams, deps: Deps): Prom
   }
 
   const { lat, lon } = input;
-  const url = buildForecastUrl(resolveBaseUrl(deps.settings['OPEN_METEO_BASE_URL']), lat, lon);
 
-  // R22–R30: attempts with timeout, retried with backoff. Each failed attempt is logged
-  // with its detail (R18, R30); the response only ever carries a generic message.
-  const startedAt = deps.now();
-  const { outcome, attempts } = await runWithRetries(
-    () => fetchAttemptOnce(deps.fetch, url, config.timeoutMs),
-    config.maxAttempts,
-    (msg) => deps.log.error(`weather upstream lat=${lat} lon=${lon} ${msg}`),
+  // R10–R30 via the shared client. Each failed attempt is logged with its detail (R18, R30);
+  // the response only ever carries a generic message.
+  const { outcome, attempts, startedAt, finishedAt } = await getCurrentWeather(
+    lat,
+    lon,
+    config,
+    deps,
+    `weather upstream lat=${lat} lon=${lon}`,
   );
-  const finishedAt = deps.now();
 
   if (outcome.kind !== 'ok') {
     return failureResponse(outcome); // R29: last attempt decides

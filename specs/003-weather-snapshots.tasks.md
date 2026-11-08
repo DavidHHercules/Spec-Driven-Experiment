@@ -10,7 +10,7 @@ T23 is a refactor: **no test assertions may change.**
 
 | Task | Title | Rules | Status |
 |------|-------|-------|--------|
-| T23 | Refactor: extract `getCurrentWeather` | N7 | ☐ |
+| T23 | Refactor: extract `getCurrentWeather` | N7 | ☑ |
 | T24 | `parseLocations` | R36–R40, F6 | ☐ |
 | T25 | Fakes: `fakeFetchByLat`, `fakeStore` | N8 | ☐ |
 | T26 | `runSnapshots` — success path | R34, R39, R41–R44, R48 | ☐ |
@@ -27,8 +27,8 @@ Move config-aware fetch-with-retries out of `handleWeatherRequest` into
 `src/core/getCurrentWeather.ts` (plan §3). Config is still resolved before query validation.
 
 **Done when**
-- [ ] All 213 tests pass with no test changes.
-- [ ] `handleWeatherRequest` no longer imports `runWithRetries` or `fetchAttemptOnce`.
+- [x] All 213 tests pass with no test changes.
+- [x] `handleWeatherRequest` no longer imports `runWithRetries` or `fetchAttemptOnce`.
 
 ## T24 — `parseLocations`
 
