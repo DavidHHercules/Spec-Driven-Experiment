@@ -11,7 +11,7 @@ Same rules: in order, one task = one commit, tests first where there is code.
 |------|-------|--------------|--------|
 | T31 | Storage target selection + identity path | R54, R55 | ☑ |
 | T32 | Bicep infrastructure | R49–R53, R56 | ☑ |
-| T33 | Deployment package script + check | R61 | ☐ |
+| T33 | Deployment package script + check | R61 | ☑ |
 | T34 | CI workflow | R58, N11, N12 | ☐ |
 | T35 | Deploy workflow | R59 | ☐ |
 | T36 | Runbook | R60, N13 | ☐ |
@@ -40,9 +40,9 @@ Same rules: in order, one task = one commit, tests first where there is code.
 ## T33 — Deployment package script + check
 
 **Done when**
-- [ ] `npm run package:check` passes.
-- [ ] Deliberately placing a forbidden file in `.deploy/` makes the check fail (then removed).
-- [ ] `.deploy/` git- and func-ignored.
+- [x] `npm run package:check` passes.
+- [x] Deliberately placing a forbidden file in `.deploy/` makes the check fail (then removed).
+- [x] `.deploy/` git- and func-ignored.
 
 ## T34 — CI workflow
 

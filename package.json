@@ -11,7 +11,9 @@
     "test:watch": "vitest",
     "prestart": "npm run build",
     "start": "func start",
-    "azurite": "azurite --silent --location .azurite --skipApiVersionCheck"
+    "azurite": "azurite --silent --location .azurite --skipApiVersionCheck",
+    "package": "npm run build && node scripts/package.js",
+    "package:check": "npm run build && node scripts/package.js --check"
   },
   "dependencies": {
     "@azure/data-tables": "^13.3.2",
