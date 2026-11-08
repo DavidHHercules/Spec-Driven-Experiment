@@ -20,7 +20,7 @@ only test *setup* (and only where the refactor forces it).
 | T18 | Resilience config | R32, R33, N5 | ☑ |
 | T19 | Retry loop | R25–R27, R29, R30 | ☑ |
 | T20 | Wire retries into the handler | R28, R29, R31 | ☑ |
-| T21 | Adapter + local acceptance | R22, R24, R33, §9 | ☐ |
+| T21 | Adapter + local acceptance | R22, R24, R33, §9 | ☑ |
 | T22 | Acceptance review | §9 | ☐ |
 
 ---
@@ -98,9 +98,9 @@ Per plan §6: `{ hang: true }`, `{ status, hangBody: true }`, calls recorded as 
 Add `scripts/never-respond-server.js` (accepts TCP connections, never replies).
 
 **Done when** (against `func start`)
-- [ ] Normal request → 200; log shows `attempts=1`.
-- [ ] Base URL → never-respond server → `504 UPSTREAM_TIMEOUT` in 6.75–7.75 s; log shows 3 attempts.
-- [ ] `UPSTREAM_TIMEOUT_MS=abc` → still 200; warning in log naming the setting.
+- [x] Normal request → 200; log shows `attempts=1`.
+- [x] Base URL → never-respond server → `504 UPSTREAM_TIMEOUT` in 6.75–7.75 s; log shows 3 attempts.
+- [x] `UPSTREAM_TIMEOUT_MS=abc` → still 200; warning in log naming the setting.
 
 ## T22 — Acceptance review
 

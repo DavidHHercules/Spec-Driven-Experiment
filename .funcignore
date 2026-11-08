@@ -9,3 +9,4 @@ specs
 test
 tsconfig*.json
 vitest.config.ts
+scripts
