@@ -12,8 +12,8 @@ Same rules: in order, one task = one commit, tests first where there is code.
 | T31 | Storage target selection + identity path | R54, R55 | ☑ |
 | T32 | Bicep infrastructure | R49–R53, R56 | ☑ |
 | T33 | Deployment package script + check | R61 | ☑ |
-| T34 | CI workflow | R58, N11, N12 | ☐ |
-| T35 | Deploy workflow | R59 | ☐ |
+| T34 | CI workflow | R58, N11, N12 | ☑ |
+| T35 | Deploy workflow | R59 | ☑ |
 | T36 | Runbook | R60, N13 | ☐ |
 | T37 | Verification sweep | §5 | ☐ |
 | T38 | Acceptance review | §8 | ☐ |
@@ -47,14 +47,14 @@ Same rules: in order, one task = one commit, tests first where there is code.
 ## T34 — CI workflow
 
 **Done when**
-- [ ] `.github/workflows/ci.yml` per plan §5; parses as YAML; triggers `push`, `pull_request`, `workflow_call`.
-- [ ] Its npm steps pass locally on Node 22.
+- [x] `.github/workflows/ci.yml` per plan §5; parses as YAML; triggers `push`, `pull_request`, `workflow_call`.
+- [x] Its npm steps pass locally on Node 22.
 
 ## T35 — Deploy workflow
 
 **Done when**
-- [ ] `.github/workflows/deploy.yml` per plan §5; parses as YAML; only `workflow_dispatch`.
-- [ ] Reviewed against every R59 bullet; no secrets referenced (only `vars.*`).
+- [x] `.github/workflows/deploy.yml` per plan §5; parses as YAML; only `workflow_dispatch`.
+- [x] Reviewed against every R59 bullet; no secrets referenced (only `vars.*`).
 
 ## T36 — Runbook
 

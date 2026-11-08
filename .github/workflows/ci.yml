@@ -1,0 +1,43 @@
+# Spec 004 R58: test and build on every push and pull request.
+# Also callable from deploy.yml (workflow_call) so deploys run exactly the same checks.
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Typecheck, test, package, compile infra
+    runs-on: ubuntu-latest
+    timeout-minutes: 10 # N11 target is < 3 min; this is a hard stop for hung runs
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build and verify deployment package (R61)
+        run: npm run package:check
+
+      - name: Compile and lint infrastructure (R49)
+        run: |
+          az bicep install
+          az bicep build --file infra/main.bicep --stdout > /dev/null
+          az bicep lint --file infra/main.bicep

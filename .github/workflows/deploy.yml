@@ -1,0 +1,72 @@
+# Spec 004 R59: manual deploy to Azure. Dormant until Azure is set up (D30) — see docs/deploy.md.
+#
+# Required GitHub repository variables (not secrets — OIDC means no Azure secret is stored):
+#   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID, AZURE_RESOURCE_GROUP, AZURE_FUNCTIONAPP_NAME
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false # never cancel a deploy halfway
+
+jobs:
+  ci:
+    name: CI checks
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    name: Deploy to Azure
+    needs: ci # R59: deploy only if CI passes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    permissions:
+      contents: read
+      id-token: write # OIDC token for azure/login
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build deployment package (R61)
+        run: npm run package:check
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy package
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
+          package: .deploy
+          sku: flexconsumption
+
+      - name: Smoke test GET /api/weather (R59)
+        env:
+          RG: ${{ vars.AZURE_RESOURCE_GROUP }}
+          APP: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
+        run: |
+          # Flex Consumption apps may have a non-predictable default hostname; ask Azure.
+          host=$(az functionapp show -g "$RG" -n "$APP" --query defaultHostName -o tsv)
+          url="https://${host}/api/weather?lat=47.6&lon=-122.3"
+          echo "Smoke testing $url"
+          # Retries cover cold start after deploy. -f makes curl fail on any HTTP error status.
+          curl -fsS --retry 10 --retry-all-errors --retry-delay 15 --max-time 30 "$url"
+          echo
+          echo "Smoke test passed"
