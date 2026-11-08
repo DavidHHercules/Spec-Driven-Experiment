@@ -1,4 +1,4 @@
-☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
+☑ |☑ |☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
 
 - **Implements:** [Spec 001](001-current-weather.md) via [Plan 001](001-current-weather.plan.md)
 - **Created:** 2026-11-07
@@ -136,22 +136,22 @@ Install `@azure/functions` (dependency) and `typescript`, `vitest`, `@types/node
 - `fakeLogger()` — captures `info` / `error` lines in arrays.
 
 **Done when**
-- [ ] Fakes compile and are used by T9/T10. (No separate tests — they're exercised there.)
+- [x] Fakes compile and are used by T9/T10. (No separate tests — they're exercised there.)
 
 ## T9 — Orchestration: success path
 
 `src/core/handleWeatherRequest.ts`, happy path only.
 
 **Tests first** — `test/handleWeatherRequest.test.ts`:
-- [ ] R1: valid query + good upstream → status 200, body matches spec §3 shape exactly (all 7 fields).
-- [ ] R10: fake fetch called exactly once with the expected URL.
-- [ ] R12/R13: body fields come from upstream; `condition` matches the code.
-- [ ] `fetchedAt` equals the fake clock's time after the response, in ISO 8601 UTC.
-- [ ] `location` echoes parsed numbers (e.g. `" 47.6 "` → `47.6`).
-- [ ] N3: exactly one `info` line containing lat, lon, and a duration in ms.
+- [x] R1: valid query + good upstream → status 200, body matches spec §3 shape exactly (all 7 fields).
+- [x] R10: fake fetch called exactly once with the expected URL.
+- [x] R12/R13: body fields come from upstream; `condition` matches the code.
+- [x] `fetchedAt` equals the fake clock's time after the response, in ISO 8601 UTC.
+- [x] `location` echoes parsed numbers (e.g. `" 47.6 "` → `47.6`).
+- [x] N3: exactly one `info` line containing lat, lon, and a duration in ms.
 
 **Done when**
-- [ ] All tests pass.
+- [x] All tests pass.
 
 ## T10 — Orchestration: failure paths
 
