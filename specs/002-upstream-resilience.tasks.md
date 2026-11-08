@@ -18,7 +18,7 @@ only test *setup* (and only where the refactor forces it).
 | T16 | Fake fetch upgrades | N4, N6 | ☑ |
 | T17 | Attempt timeout + abort | R22, R24, N6 | ☑ |
 | T18 | Resilience config | R32, R33, N5 | ☑ |
-| T19 | Retry loop | R25–R27, R29, R30 | ☐ |
+| T19 | Retry loop | R25–R27, R29, R30 | ☑ |
 | T20 | Wire retries into the handler | R28, R29, R31 | ☐ |
 | T21 | Adapter + local acceptance | R22, R24, R33, §9 | ☐ |
 | T22 | Acceptance review | §9 | ☐ |
@@ -76,13 +76,13 @@ Per plan §6: `{ hang: true }`, `{ status, hangBody: true }`, calls recorded as 
 ## T19 — Retry loop
 
 **Tests first** (`retry.test.ts`, scripted outcomes, fake timers):
-- [ ] R25: `network`, `timeout`, `status` 500/502/503/504 → retried.
-- [ ] R26: `status` 429, 404, 400 and `bad-response` → not retried (1 attempt).
-- [ ] R27: backoff timing exact — second attempt at 250 ms not 249; third at +500 ms not +499.
-- [ ] R27: stops at `maxAttempts` (1, 3, 4); with 4 attempts the last backoff is 1000 ms.
-- [ ] R28: success on attempt 2 → no attempt 3.
-- [ ] R29: last outcome is returned (timeout, then 503 → 503).
-- [ ] R30: each failed attempt logs `attempt n/N`, kind, detail, and `retrying in X ms` / `giving up`.
+- [x] R25: `network`, `timeout`, `status` 500/502/503/504 → retried.
+- [x] R26: `status` 429, 404, 400 and `bad-response` → not retried (1 attempt).
+- [x] R27: backoff timing exact — second attempt at 250 ms not 249; third at +500 ms not +499.
+- [x] R27: stops at `maxAttempts` (1, 3, 4); with 4 attempts the last backoff is 1000 ms.
+- [x] R28: success on attempt 2 → no attempt 3.
+- [x] R29: last outcome is returned (timeout, then 503 → 503).
+- [x] R30: each failed attempt logs `attempt n/N`, kind, detail, and `retrying in X ms` / `giving up`.
 
 ## T20 — Wire retries into the handler
 

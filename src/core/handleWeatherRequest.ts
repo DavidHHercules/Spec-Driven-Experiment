@@ -1,6 +1,6 @@
 import { resolveResilienceConfig } from './config';
 import { errorBody } from './errors';
-import { fetchAttemptOnce } from './fetchAttempt';
+import { describeOutcome, fetchAttemptOnce } from './fetchAttempt';
 import { buildForecastUrl, resolveBaseUrl } from './openMeteo';
 import type { AttemptOutcome, CoreResponse, Deps } from './types';
 import { validateQuery } from './validate';
@@ -67,19 +67,5 @@ function failureResponse(outcome: Exclude<AttemptOutcome, { kind: 'ok' }>): Core
         status: 502,
         body: errorBody('UPSTREAM_BAD_RESPONSE', 'The weather provider returned an unexpected response.'),
       };
-  }
-}
-
-/** One-line description of a failed attempt, for logs. */
-export function describeOutcome(outcome: Exclude<AttemptOutcome, { kind: 'ok' }>): string {
-  switch (outcome.kind) {
-    case 'network':
-      return `network ${outcome.detail}`;
-    case 'timeout':
-      return `timeout after ${outcome.timeoutMs}ms`;
-    case 'status':
-      return `status ${outcome.status} ${outcome.detail}`;
-    case 'bad-response':
-      return `bad response ${outcome.detail}`;
   }
 }

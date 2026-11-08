@@ -71,3 +71,17 @@ export function describeError(err: unknown): string {
 function snippet(text: string): string {
   return JSON.stringify(text.slice(0, LOG_SNIPPET_LENGTH));
 }
+
+/** One-line description of a failed attempt, for logs. */
+export function describeOutcome(outcome: Exclude<AttemptOutcome, { kind: 'ok' }>): string {
+  switch (outcome.kind) {
+    case 'network':
+      return `network ${outcome.detail}`;
+    case 'timeout':
+      return `timeout after ${outcome.timeoutMs}ms`;
+    case 'status':
+      return `status ${outcome.status} ${outcome.detail}`;
+    case 'bad-response':
+      return `bad response ${outcome.detail}`;
+  }
+}
