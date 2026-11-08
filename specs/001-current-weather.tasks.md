@@ -1,4 +1,4 @@
-☑ |☑ |☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
+☑ |☑ |☑ |☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
 
 - **Implements:** [Spec 001](001-current-weather.md) via [Plan 001](001-current-weather.plan.md)
 - **Created:** 2026-11-07
@@ -156,17 +156,17 @@ Install `@azure/functions` (dependency) and `typescript`, `vitest`, `@types/node
 ## T10 — Orchestration: failure paths
 
 **Tests first**:
-- [ ] R9: invalid query → 400, fake fetch called **zero** times.
-- [ ] R15: upstream 500 and 404 → 502 `UPSTREAM_ERROR`.
-- [ ] R16: fetch throws → 502 `UPSTREAM_ERROR`.
-- [ ] R17: upstream 200 with invalid JSON → 502 `UPSTREAM_BAD_RESPONSE`.
-- [ ] R17: upstream 200 with bad shape → 502 `UPSTREAM_BAD_RESPONSE`.
-- [ ] R18: in each failure above, an `error` log line contains the detail (status / message),
+- [x] R9: invalid query → 400, fake fetch called **zero** times.
+- [x] R15: upstream 500 and 404 → 502 `UPSTREAM_ERROR`.
+- [x] R16: fetch throws → 502 `UPSTREAM_ERROR`.
+- [x] R17: upstream 200 with invalid JSON → 502 `UPSTREAM_BAD_RESPONSE`.
+- [x] R17: upstream 200 with bad shape → 502 `UPSTREAM_BAD_RESPONSE`.
+- [x] R18: in each failure above, an `error` log line contains the detail (status / message),
       and the response `message` does **not** contain it.
 
 **Done when**
-- [ ] All tests pass.
-- [ ] No test in the suite uses real `fetch` (N1).
+- [x] All tests pass.
+- [x] No test in the suite uses real `fetch` (N1).
 
 ## T11 — Azure Function adapter
 

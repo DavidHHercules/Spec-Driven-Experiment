@@ -96,3 +96,88 @@ describe('handleWeatherRequest — success path', () => {
     expect(logs.error).toHaveLength(0);
   });
 });
+
+describe('handleWeatherRequest — failure paths', () => {
+  it.each([
+    ['', 'MISSING_LAT'],
+    ['lat=1', 'MISSING_LON'],
+    ['lat=999&lon=0', 'INVALID_LAT'],
+    ['lat=0&lon=abc', 'INVALID_LON'],
+  ])('R9: invalid query %j → 400 %s and upstream is never called', async (s, code) => {
+    const { deps, calls } = makeDeps({ fetch: [] });
+
+    const res = await handleWeatherRequest(q(s), deps);
+
+    expect(res.status).toBe(400);
+    expect(res.body).toMatchObject({ error: { code } });
+    expect(calls).toHaveLength(0);
+  });
+
+  it.each([500, 503, 404, 429])('R15: upstream %i → 502 UPSTREAM_ERROR', async (status) => {
+    const { deps } = makeDeps({ fetch: [{ status, text: 'upstream says no' }] });
+
+    const res = await handleWeatherRequest(q('lat=1&lon=2'), deps);
+
+    expect(res.status).toBe(502);
+    expect(res.body).toMatchObject({ error: { code: 'UPSTREAM_ERROR' } });
+  });
+
+  it('R16: network failure (fetch rejects) → 502 UPSTREAM_ERROR', async () => {
+    const { deps } = makeDeps({ fetch: [{ throws: new TypeError('fetch failed: ECONNREFUSED') }] });
+
+    const res = await handleWeatherRequest(q('lat=1&lon=2'), deps);
+
+    expect(res.status).toBe(502);
+    expect(res.body).toMatchObject({ error: { code: 'UPSTREAM_ERROR' } });
+  });
+
+  it('R17: upstream 200 with invalid JSON → 502 UPSTREAM_BAD_RESPONSE', async () => {
+    const { deps } = makeDeps({ fetch: [{ status: 200, text: '<html>not json</html>' }] });
+
+    const res = await handleWeatherRequest(q('lat=1&lon=2'), deps);
+
+    expect(res.status).toBe(502);
+    expect(res.body).toMatchObject({ error: { code: 'UPSTREAM_BAD_RESPONSE' } });
+  });
+
+  it('R17: upstream 200 with wrong shape → 502 UPSTREAM_BAD_RESPONSE', async () => {
+    const { deps } = makeDeps({ fetch: [{ status: 200, json: upstreamBody({ weather_code: 'rain' }) }] });
+
+    const res = await handleWeatherRequest(q('lat=1&lon=2'), deps);
+
+    expect(res.status).toBe(502);
+    expect(res.body).toMatchObject({ error: { code: 'UPSTREAM_BAD_RESPONSE' } });
+  });
+
+  // R18: one case per failure kind. The secret detail must reach the log, never the response.
+  it.each([
+    ['non-2xx', { status: 500, text: 'SECRET-DETAIL internal stack' }],
+    ['network', { throws: new Error('SECRET-DETAIL connection reset') }],
+    ['invalid JSON', { status: 200, text: 'SECRET-DETAIL not json' }],
+    ['bad shape', { status: 200, json: upstreamBody({ temperature_2m: 'SECRET-DETAIL' }) }],
+  ] as const)('R18: %s failure → detail is logged but not returned', async (_kind, step) => {
+    const { deps, logs } = makeDeps({ fetch: [step] });
+
+    const res = await handleWeatherRequest(q('lat=1&lon=2'), deps);
+
+    expect(res.status).toBe(502);
+    expect(logs.error.join('\n')).toContain('SECRET-DETAIL');
+    expect(JSON.stringify(res.body)).not.toContain('SECRET-DETAIL');
+  });
+
+  it('R18: non-2xx status code is included in the log', async () => {
+    const { deps, logs } = makeDeps({ fetch: [{ status: 503, text: '' }] });
+
+    await handleWeatherRequest(q('lat=1&lon=2'), deps);
+
+    expect(logs.error.join('\n')).toContain('503');
+  });
+
+  it('N3: no success line is logged on failure', async () => {
+    const { deps, logs } = makeDeps({ fetch: [{ status: 500, text: '' }] });
+
+    await handleWeatherRequest(q('lat=1&lon=2'), deps);
+
+    expect(logs.info).toHaveLength(0);
+  });
+});
