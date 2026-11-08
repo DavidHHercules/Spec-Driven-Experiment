@@ -165,6 +165,15 @@ describe('handleWeatherRequest — failure paths', () => {
     expect(JSON.stringify(res.body)).not.toContain('SECRET-DETAIL');
   });
 
+  it('R18: network failure log includes the underlying cause (Node fetch wraps it)', async () => {
+    const err = new TypeError('fetch failed', { cause: new Error('connect ECONNREFUSED 127.0.0.1:1') });
+    const { deps, logs } = makeDeps({ fetch: [{ throws: err }] });
+
+    await handleWeatherRequest(q('lat=1&lon=2'), deps);
+
+    expect(logs.error.join('\n')).toContain('ECONNREFUSED');
+  });
+
   it('R18: non-2xx status code is included in the log', async () => {
     const { deps, logs } = makeDeps({ fetch: [{ status: 503, text: '' }] });
 

@@ -93,8 +93,15 @@ export async function handleWeatherRequest(q: URLSearchParams, deps: Deps): Prom
   };
 }
 
+/**
+ * Formats an error for logging, including its `cause` chain. Node's fetch throws a
+ * generic "TypeError: fetch failed" and puts the real reason (ECONNREFUSED, DNS
+ * failure, TLS error…) in `cause` — without this, R18's "details are logged" is hollow.
+ */
 function describeError(err: unknown): string {
-  return err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+  if (!(err instanceof Error)) return String(err);
+  const own = `${err.name}: ${err.message}`;
+  return err.cause === undefined ? own : `${own} (cause: ${describeError(err.cause)})`;
 }
 
 function snippet(text: string): string {

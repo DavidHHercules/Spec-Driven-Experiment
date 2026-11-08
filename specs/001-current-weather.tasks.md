@@ -1,4 +1,4 @@
-☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
+☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
 
 - **Implements:** [Spec 001](001-current-weather.md) via [Plan 001](001-current-weather.plan.md)
 - **Created:** 2026-11-07
@@ -185,11 +185,15 @@ Prerequisite: `winget install Microsoft.Azure.FunctionsCoreTools`, then copy
 `local.settings.example.json` → `local.settings.json`.
 
 **Done when** (`npm start`, then request each URL)
-- [ ] `/api/weather?lat=47.6&lon=-122.3` → 200 with real data and a sensible `condition`.
-- [ ] `/api/weather?lat=999&lon=0` → 400 `INVALID_LAT`.
-- [ ] `/api/weather?lat=47.6` → 400 `MISSING_LON`.
-- [ ] With `OPEN_METEO_BASE_URL` pointed at a bad host → 502 `UPSTREAM_ERROR`, detail visible in the `func` console only.
-- [ ] Console shows the N3 success log line.
+- [x] `/api/weather?lat=47.6&lon=-122.3` → 200 with real data and a sensible `condition`.
+- [x] `/api/weather?lat=999&lon=0` → 400 `INVALID_LAT`.
+- [x] `/api/weather?lat=47.6` → 400 `MISSING_LON`.
+- [x] With `OPEN_METEO_BASE_URL` pointed at a bad host → 502 `UPSTREAM_ERROR`, detail visible in the `func` console only.
+- [x] Console shows the N3 success log line.
+
+> **Finding (2026-11-08):** the bad-host check logged only .
+> Node's fetch hides the real reason in . Fixed (test-first) so logs include the
+> cause chain. Not a spec change — it makes R18 ("details are logged") actually true.
 
 ## T13 — Acceptance review
 
