@@ -9,7 +9,7 @@ Same rules: in order, one task = one commit, tests first where there is code.
 
 | Task | Title | Requirements | Status |
 |------|-------|--------------|--------|
-| T31 | Storage target selection + identity path | R54, R55 | ☐ |
+| T31 | Storage target selection + identity path | R54, R55 | ☑ |
 | T32 | Bicep infrastructure | R49–R53, R56 | ☐ |
 | T33 | Deployment package script + check | R61 | ☐ |
 | T34 | CI workflow | R58, N11, N12 | ☐ |
@@ -23,12 +23,12 @@ Same rules: in order, one task = one commit, tests first where there is code.
 ## T31 — Storage target selection + identity path
 
 **Tests first** (`tableSnapshotStore.test.ts`):
-- [ ] R54.1: connection string set → `connection-string` (Azurite and real formats).
-- [ ] R54.1: connection string set **and** account name set → connection string wins.
-- [ ] R54.2: only `AzureWebJobsStorage__accountName` → `identity` with `https://{account}.table.core.windows.net`.
-- [ ] R54.2: empty / whitespace connection string is treated as unset.
-- [ ] R54.3: neither → `none`; the store's `upsert` rejects naming both settings.
-- [ ] R55: the snapshots adapter uses `createSnapshotStoreFromSettings(process.env)`.
+- [x] R54.1: connection string set → `connection-string` (Azurite and real formats).
+- [x] R54.1: connection string set **and** account name set → connection string wins.
+- [x] R54.2: only `AzureWebJobsStorage__accountName` → `identity` with `https://{account}.table.core.windows.net`.
+- [x] R54.2: empty / whitespace connection string is treated as unset.
+- [x] R54.3: neither → `none`; the store's `upsert` rejects naming both settings.
+- [x] R55: the snapshots adapter uses `createSnapshotStoreFromSettings(process.env)`.
 
 ## T32 — Bicep infrastructure
 
