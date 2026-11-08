@@ -1,5 +1,5 @@
 import { errorBody } from './errors';
-import { buildForecastUrl, parseCurrent } from './openMeteo';
+import { buildForecastUrl, parseCurrent, resolveBaseUrl } from './openMeteo';
 import type { CoreResponse, Deps } from './types';
 import { validateQuery } from './validate';
 import { describeWeatherCode } from './weatherCodes';
@@ -29,7 +29,7 @@ export async function handleWeatherRequest(q: URLSearchParams, deps: Deps): Prom
   }
 
   const { lat, lon } = input;
-  const url = buildForecastUrl(deps.baseUrl, lat, lon);
+  const url = buildForecastUrl(resolveBaseUrl(deps.settings['OPEN_METEO_BASE_URL']), lat, lon);
 
   // R10, R16: a rejected fetch is a network-level failure.
   const startedAt = deps.now();

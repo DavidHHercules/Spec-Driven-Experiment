@@ -13,7 +13,7 @@ only test *setup* (and only where the refactor forces it).
 
 | Task | Title | Rules | Status |
 |------|-------|-------|--------|
-| T14 | Refactor: `Deps.settings` + `log.warn` | — | ☐ |
+| T14 | Refactor: `Deps.settings` + `log.warn` | — | ☑ |
 | T15 | Refactor: extract `fetchAttemptOnce` | — | ☐ |
 | T16 | Fake fetch upgrades | N4, N6 | ☐ |
 | T17 | Attempt timeout + abort | R22, R24, N6 | ☐ |
@@ -32,8 +32,8 @@ via `resolveBaseUrl(settings.OPEN_METEO_BASE_URL)`. Add `warn` to the log interf
 passes `process.env` and maps `context.warn`.
 
 **Done when**
-- [ ] All 133 existing tests pass; only `makeDeps` and the base-URL test's setup changed.
-- [ ] Build and typecheck pass.
+- [x] All 133 existing tests pass; only `makeDeps` and the base-URL test's setup changed.
+- [x] Build and typecheck pass.
 
 ## T15 — Refactor: extract `fetchAttemptOnce`
 

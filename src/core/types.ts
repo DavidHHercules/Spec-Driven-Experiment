@@ -33,6 +33,7 @@ export interface CoreResponse {
 export interface Deps {
   fetch: typeof globalThis.fetch;
   now: () => Date;
-  baseUrl: string;
-  log: { info(msg: string): void; error(msg: string): void };
+  /** Raw app settings (process.env in production). Resolved and validated by the core. */
+  settings: Readonly<Record<string, string | undefined>>;
+  log: { info(msg: string): void; warn(msg: string): void; error(msg: string): void };
 }

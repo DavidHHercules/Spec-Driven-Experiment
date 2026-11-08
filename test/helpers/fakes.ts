@@ -32,8 +32,18 @@ export function fakeClock(...isoDates: string[]) {
 /** Fake logger: captures lines so tests can assert on them. */
 export function fakeLogger() {
   const info: string[] = [];
+  const warn: string[] = [];
   const error: string[] = [];
-  return { info, error, log: { info: (m: string) => info.push(m), error: (m: string) => error.push(m) } };
+  return {
+    info,
+    warn,
+    error,
+    log: {
+      info: (m: string) => info.push(m),
+      warn: (m: string) => warn.push(m),
+      error: (m: string) => error.push(m),
+    },
+  };
 }
 
 /** A valid Open-Meteo body, overridable per test. */
@@ -59,7 +69,7 @@ export function makeDeps(overrides: { fetch: FetchStep[]; clock?: string[] }) {
   const deps: Deps = {
     fetch: f.fetch,
     now: fakeClock(...(overrides.clock ?? ['2026-11-07T21:14:03.262Z', '2026-11-07T21:14:03.512Z'])),
-    baseUrl: 'https://api.open-meteo.com',
+    settings: {},
     log: logger.log,
   };
   return { deps, calls: f.calls, logs: logger };

@@ -36,7 +36,7 @@ describe('handleWeatherRequest — success path', () => {
 
   it('R10/R11: uses the injected base URL', async () => {
     const { deps, calls } = makeDeps({ fetch: [{ status: 200, json: upstreamBody() }] });
-    deps.baseUrl = 'http://localhost:7777';
+    deps.settings = { OPEN_METEO_BASE_URL: 'http://localhost:7777' };
 
     await handleWeatherRequest(q('lat=1&lon=2'), deps);
 
