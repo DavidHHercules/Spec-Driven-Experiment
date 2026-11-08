@@ -1,4 +1,4 @@
-☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
+# Tasks 001: Current Weather Endpoint
 
 - **Implements:** [Spec 001](001-current-weather.md) via [Plan 001](001-current-weather.plan.md)
 - **Created:** 2026-11-07
@@ -20,16 +20,16 @@
 | T1  | Project scaffolding | — | ☑ |
 | T2  | Shared types and error builder | §3 | ☑ |
 | T3  | `parseCoordinate` | §4.1, D2 | ☑ |
-| T4  | `validateQuery` | R2–R8, R19, R21 | ☐ |
-| T5  | Weather code mapping | R13, R14, §5 | ☐ |
-| T6  | Base URL and request URL | R10, R11 | ☐ |
-| T7  | Upstream response parsing | R12, R17 | ☐ |
-| T8  | Test fakes | N1 | ☐ |
-| T9  | Orchestration — success path | R1, R10, R12, N3 | ☐ |
-| T10 | Orchestration — failure paths | R9, R15–R18 | ☐ |
-| T11 | Azure Function adapter | R11, R20, N2 | ☐ |
-| T12 | Local smoke test | §7 | ☐ |
-| T13 | Acceptance review | §7 | ☐ |
+| T4  | `validateQuery` | R2–R8, R19, R21 | ☑ |
+| T5  | Weather code mapping | R13, R14, §5 | ☑ |
+| T6  | Base URL and request URL | R10, R11 | ☑ |
+| T7  | Upstream response parsing | R12, R17 | ☑ |
+| T8  | Test fakes | N1 | ☑ |
+| T9  | Orchestration — success path | R1, R10, R12, N3 | ☑ |
+| T10 | Orchestration — failure paths | R9, R15–R18 | ☑ |
+| T11 | Azure Function adapter | R11, R20, N2 | ☑ |
+| T12 | Local smoke test | §7 | ☑ |
+| T13 | Acceptance review | §7 | ☑ |
 
 ---
 
