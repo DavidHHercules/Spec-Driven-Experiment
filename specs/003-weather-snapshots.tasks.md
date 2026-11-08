@@ -13,8 +13,8 @@ T23 is a refactor: **no test assertions may change.**
 | T23 | Refactor: extract `getCurrentWeather` | N7 | ☑ |
 | T24 | `parseLocations` | R36–R40, F6 | ☑ |
 | T25 | Fakes: `fakeFetchByLat`, `fakeStore` | N8 | ☑ |
-| T26 | `runSnapshots` — success path | R34, R39, R41–R44, R48 | ☐ |
-| T27 | `runSnapshots` — failures and late runs | R35, R45–R48 | ☐ |
+| T26 | `runSnapshots` — success path | R34, R39, R41–R44, R48 | ☑ |
+| T27 | `runSnapshots` — failures and late runs | R35, R45–R48 | ☑ |
 | T28 | Table store, timer adapter, Azurite setup | R43, R44, N9 | ☐ |
 | T29 | Local acceptance | §8 | ☐ |
 | T30 | Acceptance review | §8 | ☐ |
@@ -55,25 +55,25 @@ is observable; throws for listed location ids).
 ## T26 — `runSnapshots`: success path
 
 **Tests first** (`snapshots.test.ts`):
-- [ ] R34: `SNAPSHOT_SCHEDULE === '0 */30 * * * *'`.
-- [ ] R43: two locations → two snapshots with all §5 fields.
-- [ ] R44: same location + same `observedAt` across two runs → one stored record (overwritten).
-- [ ] R44: different `observedAt` → two records.
-- [ ] R41: a location whose first attempt is 503 is retried and saved (Spec 002 behavior applies).
-- [ ] R42: a location stuck in backoff doesn't delay another location's save.
-- [ ] R39: no valid locations → warning, zero fetch calls, resolves (no throw).
-- [ ] R48: summary line `saved=2 failed=0 skipped=0 durationMs=…`.
+- [x] R34: `SNAPSHOT_SCHEDULE === '0 */30 * * * *'`.
+- [x] R43: two locations → two snapshots with all §5 fields.
+- [x] R44: same location + same `observedAt` across two runs → one stored record (overwritten).
+- [x] R44: different `observedAt` → two records.
+- [x] R41: a location whose first attempt is 503 is retried and saved (Spec 002 behavior applies).
+- [x] R42: a location stuck in backoff doesn't delay another location's save.
+- [x] R39: no valid locations → warning, zero fetch calls, resolves (no throw).
+- [x] R48: summary line `saved=2 failed=0 skipped=0 durationMs=…`.
 
 ## T27 — `runSnapshots`: failures and late runs
 
 **Tests first**:
-- [ ] R45: one location fails upstream → others saved; failure logged with id and reason.
-- [ ] R45: storing one location fails → others saved; counted as failed.
-- [ ] R46: all attempted locations fail → throws **after** logging the summary.
-- [ ] R47: 1 ok + 2 failed → resolves.
-- [ ] R35: `isPastDue` → warning, run proceeds normally.
-- [ ] R48: `skipped` reflects invalid + excess config entries.
-- [ ] Spec 002 R33: config warnings logged once per run, not once per location.
+- [x] R45: one location fails upstream → others saved; failure logged with id and reason.
+- [x] R45: storing one location fails → others saved; counted as failed.
+- [x] R46: all attempted locations fail → throws **after** logging the summary.
+- [x] R47: 1 ok + 2 failed → resolves.
+- [x] R35: `isPastDue` → warning, run proceeds normally.
+- [x] R48: `skipped` reflects invalid + excess config entries.
+- [x] Spec 002 R33: config warnings logged once per run, not once per location.
 
 ## T28 — Table store, timer adapter, Azurite setup
 
