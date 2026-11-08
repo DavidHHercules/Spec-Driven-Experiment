@@ -1,3 +1,4 @@
+import type { Snapshot, SnapshotStore } from '../../src/core/snapshots';
 import type { Deps } from '../../src/core/types';
 
 /** One scripted upstream outcome. */
@@ -28,38 +29,66 @@ export function fakeFetch(...steps: FetchStep[]) {
     calls.push({ url: String(input), get aborted() { return signal?.aborted ?? false; } });
     const step = steps[calls.length - 1];
     if (!step) throw new Error(`fakeFetch: unexpected call #${calls.length}`);
-    if ('throws' in step) throw step.throws;
-
-    if ('hang' in step) {
-      return new Promise<Response>((_, reject) => {
-        signal?.addEventListener('abort', () => reject(abortError()));
-      });
-    }
-
-    if ('hangBody' in step) {
-      const body = new ReadableStream<Uint8Array>({
-        start(controller) {
-          signal?.addEventListener('abort', () => controller.error(abortError()));
-        },
-      });
-      return new Response(body, { status: step.status });
-    }
-
-    if ('bodyError' in step) {
-      const err = step.bodyError;
-      const body = new ReadableStream<Uint8Array>({
-        start(controller) {
-          controller.enqueue(new TextEncoder().encode('{"current":'));
-          controller.error(err);
-        },
-      });
-      return new Response(body, { status: step.status });
-    }
-
-    const body = 'json' in step ? JSON.stringify(step.json) : step.text;
-    return new Response(body, { status: step.status });
+    return respond(step, signal);
   };
   return { fetch: fn as typeof globalThis.fetch, calls };
+}
+
+/**
+ * Fake fetch for concurrent callers (Spec 003): each latitude has its own scripted
+ * sequence, so results don't depend on the order concurrent calls happen to arrive.
+ * Keys are the `latitude` query value exactly as sent, e.g. '47.6'.
+ */
+export function fakeFetchByLat(script: Record<string, FetchStep[]>) {
+  const calls: FetchCall[] = [];
+  const perLat = new Map<string, number>();
+  const fn = async (input: string | URL | Request, init?: RequestInit): Promise<Response> => {
+    const signal = init?.signal ?? undefined;
+    const url = String(input);
+    calls.push({ url, get aborted() { return signal?.aborted ?? false; } });
+    const lat = new URL(url).searchParams.get('latitude') ?? '';
+    const n = perLat.get(lat) ?? 0;
+    perLat.set(lat, n + 1);
+    const step = script[lat]?.[n];
+    if (!step) throw new Error(`fakeFetchByLat: unexpected call #${n + 1} for latitude ${lat}`);
+    return respond(step, signal);
+  };
+  const callsFor = (lat: string) => calls.filter((c) => new URL(c.url).searchParams.get('latitude') === lat);
+  return { fetch: fn as typeof globalThis.fetch, calls, callsFor };
+}
+
+/** Turns one scripted step into what real fetch would do. */
+async function respond(step: FetchStep, signal: AbortSignal | undefined): Promise<Response> {
+  if ('throws' in step) throw step.throws;
+
+  if ('hang' in step) {
+    return new Promise<Response>((_, reject) => {
+      signal?.addEventListener('abort', () => reject(abortError()));
+    });
+  }
+
+  if ('hangBody' in step) {
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        signal?.addEventListener('abort', () => controller.error(abortError()));
+      },
+    });
+    return new Response(body, { status: step.status });
+  }
+
+  if ('bodyError' in step) {
+    const err = step.bodyError;
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode('{"current":'));
+        controller.error(err);
+      },
+    });
+    return new Response(body, { status: step.status });
+  }
+
+  const body = 'json' in step ? JSON.stringify(step.json) : step.text;
+  return new Response(body, { status: step.status });
 }
 
 /** Fake clock: returns the given dates in order; repeats the last one. */
@@ -114,4 +143,23 @@ export function makeDeps(overrides: { fetch: FetchStep[]; clock?: string[] }) {
     log: logger.log,
   };
   return { deps, calls: f.calls, logs: logger };
+}
+
+/**
+ * Fake snapshot store (Spec 003 N8). Keyed by identity (location id + observedAt), so an
+ * overwrite (R44) is observable as "still one record". Throws for ids in `failFor`.
+ */
+export function fakeStore(opts: { failFor?: string[] } = {}) {
+  const records = new Map<string, Snapshot>();
+  const upserts: Snapshot[] = [];
+  const store: SnapshotStore = {
+    async upsert(s) {
+      upserts.push(s);
+      if (opts.failFor?.includes(s.locationId)) {
+        throw new Error(`fakeStore: simulated storage failure for ${s.locationId}`);
+      }
+      records.set(`${s.locationId}|${s.observedAt}`, s);
+    },
+  };
+  return { store, records, upserts };
 }

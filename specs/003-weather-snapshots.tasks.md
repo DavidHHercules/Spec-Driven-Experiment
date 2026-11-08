@@ -12,7 +12,7 @@ T23 is a refactor: **no test assertions may change.**
 |------|-------|-------|--------|
 | T23 | Refactor: extract `getCurrentWeather` | N7 | ☑ |
 | T24 | `parseLocations` | R36–R40, F6 | ☑ |
-| T25 | Fakes: `fakeFetchByLat`, `fakeStore` | N8 | ☐ |
+| T25 | Fakes: `fakeFetchByLat`, `fakeStore` | N8 | ☑ |
 | T26 | `runSnapshots` — success path | R34, R39, R41–R44, R48 | ☐ |
 | T27 | `runSnapshots` — failures and late runs | R35, R45–R48 | ☐ |
 | T28 | Table store, timer adapter, Azurite setup | R43, R44, N9 | ☐ |
@@ -50,7 +50,7 @@ Move config-aware fetch-with-retries out of `handleWeatherRequest` into
 is observable; throws for listed location ids).
 
 **Done when**
-- [ ] Used by T26/T27; typecheck passes.
+- [x] Used by T26/T27; typecheck passes.
 
 ## T26 — `runSnapshots`: success path
 
