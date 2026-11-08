@@ -61,7 +61,7 @@ Rule IDs continue from Spec 001 so every ID in the project is unique.
 ### Retries
 
 - **R25** — These attempt failures are **transient** and are retried: *(D10)*
-  - network-level failure (Spec 001 R16)
+  - network-level failure (Spec 001 R16), **including a connection dropped while reading the body** of a 2xx response *(F4)*
   - timeout (R22)
   - upstream status **500, 502, 503, 504**
 - **R26** — All other failures are **permanent** and are never retried, including:
@@ -89,7 +89,7 @@ Rule IDs continue from Spec 001 so every ID in the project is unique.
   | `UPSTREAM_MAX_ATTEMPTS` | 3 | integer 1–4 |
 
   Backoff delays are not configurable.
-- **R33** — Given a setting is present but invalid (not an integer in its range, e.g. `abc`, `0`, `2.5`, `9999`), then its default is used and a warning naming the setting and the bad value is logged on each invocation. The endpoint keeps working.
+- **R33** — Given a setting is present but invalid (not an integer in its range, e.g. `abc`, `0`, `2.5`, `9999`), then its default is used and a warning naming the setting and the bad value is logged on each invocation. The endpoint keeps working. Surrounding whitespace is trimmed before validation, so `" 3 "` is valid (consistent with D2). *(F5)*
 
 ## 5. Error codes (additions)
 
@@ -189,3 +189,4 @@ Q1–Q7 from the draft map to D8–D14.
 |------------|--------|
 | 2026-11-08 | Draft created with open questions Q1–Q7. |
 | 2026-11-08 | Review: resolved Q1–Q7 as D8–D14. Replaced placeholders; R23 rewritten from "total budget" to a derived bound; added R33 (invalid config). Status → Approved. |
+| 2026-11-08 | Amendment from planning feedback (plan §8): R25 clarifies mid-body connection drops are network failures (F4); R33 clarifies whitespace is trimmed (F5). |
