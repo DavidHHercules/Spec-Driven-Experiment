@@ -1,4 +1,4 @@
-☑ |# Tasks 001: Current Weather Endpoint
+☑ |☑ |# Tasks 001: Current Weather Endpoint
 
 - **Implements:** [Spec 001](001-current-weather.md) via [Plan 001](001-current-weather.plan.md)
 - **Created:** 2026-11-07
@@ -91,11 +91,11 @@ Install `@azure/functions` (dependency) and `typescript`, `vitest`, `@types/node
 `src/core/weatherCodes.ts` → `describeWeatherCode(code)`.
 
 **Tests first** — `test/weatherCodes.test.ts`:
-- [ ] Every code listed in spec §5 maps to its text (table-driven).
-- [ ] R14: unlisted integers (e.g. `4`, `100`, `-1`) → `"Unknown"`.
+- [x] Every code listed in spec §5 maps to its text (table-driven).
+- [x] R14: unlisted integers (e.g. `4`, `100`, `-1`) → `"Unknown"`.
 
 **Done when**
-- [ ] All tests pass.
+- [x] All tests pass.
 
 ## T6 — Base URL and request URL
 
