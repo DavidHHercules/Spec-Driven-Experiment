@@ -46,7 +46,7 @@ This is also the project's **second function**, living in the **same Function Ap
 
 ## 4. Behavior rules
 
-Rule IDs continue from Spec 002. Rules marked *(proposed Dn)* depend on a decision in §9.
+Rule IDs continue from Spec 002. Rules marked *(Dn)* trace to a decision in §9.
 
 ### Schedule
 
@@ -59,7 +59,7 @@ Rule IDs continue from Spec 002. Rules marked *(proposed Dn)* depend on a decisi
 - **R37** — A valid entry has:
   - `id`: 1–32 characters of lowercase `a–z`, digits, `-`
   - `lat`, `lon`: same format and ranges as the HTTP endpoint (Spec 001 §4.1, R6, R7)
-- **R38** — Given an entry is invalid or its `id` repeats an earlier entry, then that entry is skipped with a warning quoting it; all valid entries are still processed.
+- **R38** — Given an entry is invalid or its `id` repeats an earlier **valid** entry, then that entry is skipped with a warning quoting it; all valid entries are still processed. An invalid entry does not claim its id: in `a=bad; a=1,2` the second entry is used. *(F6)*
 - **R39** — Given `SNAPSHOT_LOCATIONS` is unset, empty, or has no valid entries, then a warning is logged, no upstream calls are made, and the run completes successfully.
 - **R40** — Given more than **10** valid entries, then only the first 10 are used and a warning is logged. *(D23)*
 
@@ -183,3 +183,4 @@ Proposed by Claude; all approved by David as written (2026-11-08).
 |------------|--------|
 | 2026-11-08 | Draft created with proposed decisions D15–D23. |
 | 2026-11-08 | Review: D15–D23 approved as proposed. Status → Approved. |
+| 2026-11-08 | Amendment from planning feedback (plan §7): R38 clarifies only valid entries claim an id (F6); §4 intro wording (F7). |
