@@ -19,7 +19,7 @@
 |------|-------|-------|--------|
 | T1  | Project scaffolding | — | ☑ |
 | T2  | Shared types and error builder | §3 | ☑ |
-| T3  | `parseCoordinate` | §4.1, D2 | ☐ |
+| T3  | `parseCoordinate` | §4.1, D2 | ☑ |
 | T4  | `validateQuery` | R2–R8, R19, R21 | ☐ |
 | T5  | Weather code mapping | R13, R14, §5 | ☐ |
 | T6  | Base URL and request URL | R10, R11 | ☐ |
@@ -62,11 +62,11 @@ Install `@azure/functions` (dependency) and `typescript`, `vitest`, `@types/node
 §4.1; **no range check** here (that's T4).
 
 **Tests first** — `test/validate.test.ts`:
-- [ ] One `it.each` case per row of spec §4.1 (15 rows), using the table's exact inputs and outputs.
+- [x] One `it.each` case per row of spec §4.1 (15 rows), using the table's exact inputs and outputs.
 
 **Done when**
-- [ ] All §4.1 rows pass.
-- [ ] `Number()` is only called after the regex check (D2).
+- [x] All §4.1 rows pass.
+- [x] `Number()` is only called after the regex check (D2).
 
 ## T4 — `validateQuery`
 
