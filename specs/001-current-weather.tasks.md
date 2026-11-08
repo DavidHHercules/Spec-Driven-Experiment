@@ -1,4 +1,4 @@
-☑ |☑ |# Tasks 001: Current Weather Endpoint
+☑ |☑ |☑ |☑ |# Tasks 001: Current Weather Endpoint
 
 - **Implements:** [Spec 001](001-current-weather.md) via [Plan 001](001-current-weather.plan.md)
 - **Created:** 2026-11-07
@@ -102,30 +102,30 @@ Install `@azure/functions` (dependency) and `typescript`, `vitest`, `@types/node
 `src/core/openMeteo.ts` → `resolveBaseUrl`, `buildForecastUrl`.
 
 **Tests first** — `test/openMeteo.test.ts`:
-- [ ] R11: `undefined` → default; `""` → default; `"https://x.com/"` and `"https://x.com"` → same URL.
-- [ ] R10: URL path is `/v1/forecast`; query has `latitude`, `longitude`, and
+- [x] R11: `undefined` → default; `""` → default; `"https://x.com/"` and `"https://x.com"` → same URL.
+- [x] R10: URL path is `/v1/forecast`; query has `latitude`, `longitude`, and
       `current=temperature_2m,wind_speed_10m,weather_code`.
-- [ ] R10 / D4: `lat=47.123456789` appears unrounded in the URL.
+- [x] R10 / D4: `lat=47.123456789` appears unrounded in the URL.
 
 **Done when**
-- [ ] All tests pass.
-- [ ] URL built with `URL` / `URLSearchParams`, not string concatenation of inputs.
+- [x] All tests pass.
+- [x] URL built with `URL` / `URLSearchParams`, not string concatenation of inputs.
 
 ## T7 — Upstream response parsing
 
 `parseCurrent(json: unknown)` in `openMeteo.ts`.
 
 **Tests first**:
-- [ ] R12: valid sample body → fields returned unchanged (include a value like `12.37` to prove no rounding).
-- [ ] R17: each required field **missing** → not ok (4 cases).
-- [ ] R17: each required field **null** → not ok (4 cases).
-- [ ] R17: wrong types — `temperature_2m: "12"`, `wind_speed_10m: true`, `weather_code: 61.5`,
+- [x] R12: valid sample body → fields returned unchanged (include a value like `12.37` to prove no rounding).
+- [x] R17: each required field **missing** → not ok (4 cases).
+- [x] R17: each required field **null** → not ok (4 cases).
+- [x] R17: wrong types — `temperature_2m: "12"`, `wind_speed_10m: true`, `weather_code: 61.5`,
       `weather_code: "rain"`, `time: ""` → not ok.
-- [ ] R17: `current` missing entirely; body is `null`; body is an array → not ok.
-- [ ] Extra unknown fields in `current` → still ok.
+- [x] R17: `current` missing entirely; body is `null`; body is an array → not ok.
+- [x] Extra unknown fields in `current` → still ok.
 
 **Done when**
-- [ ] All tests pass.
+- [x] All tests pass.
 
 ## T8 — Test fakes
 
