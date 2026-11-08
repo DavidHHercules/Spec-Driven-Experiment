@@ -25,7 +25,7 @@ Every change follows the same loop. No code is written until its spec is approve
 
 ## Prerequisites
 
-- Node.js 20+ (22 recommended — see Spec 004)
+- Node.js 22+ (`engines` in package.json)
 - Azure Functions Core Tools v4 (`winget install Microsoft.Azure.FunctionsCoreTools`)
 
 ## Running locally

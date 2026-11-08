@@ -179,3 +179,19 @@ its own scripted sequence regardless of call order.
   Azurite's own dependency tree; production dependencies report **0**. Accepted: Azurite is a
   local emulator, a devDependency, and never deployed. Resolved by upgrading Node and Azurite
   together in Spec 004.
+
+## 9. Change during implementation — Node 20 → 22 (T29, 2026-11-08)
+
+**Found:** at T29 the Functions host failed to load *any* function (`ERR_REQUIRE_ESM`).
+`@azure/data-tables` → `@typespec/ts-http-runtime@0.3.10` → `https-proxy-agent@9` is ESM-only,
+and `require()` of ES modules needs Node ≥ 20.19 / 22.12. Local Node was 20.11.1 (EOL).
+Unit tests did not catch it: Vitest loads modules as ESM, the Functions host loads our
+compiled CommonJS — a runtime-environment difference only the real host exposes.
+
+**Decision (David):** upgrade to Node 22 now rather than pin old SDK internals.
+- Local Node 22.23.4 via nvm-windows (20.11.1 kept installed).
+- `package.json` `engines.node: ">=22"`.
+- Version pins forced by Node 20 removed: Vitest 3 → 5, Azurite 3.35.0 → ^3.37, `@types/node` 20 → 22.
+- Dev-only audit findings: 17 → 4 (all in Azurite's `uuid`). Production: 0.
+
+This pulls Spec 004's planned Node upgrade forward; Spec 004 must still set Node 22 on the Azure Function App.
