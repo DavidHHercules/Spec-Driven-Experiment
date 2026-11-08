@@ -20,7 +20,7 @@ Every change follows the same loop. No code is written until its spec is approve
 |-----|---------------------------|--------|
 | 001 | Current weather endpoint ([spec](specs/001-current-weather.md), [plan](specs/001-current-weather.plan.md), [tasks](specs/001-current-weather.tasks.md)) | ✅ Done |
 | 002 | Upstream resilience: timeouts & retries ([spec](specs/002-upstream-resilience.md), [plan](specs/002-upstream-resilience.plan.md), [tasks](specs/002-upstream-resilience.tasks.md)) | ✅ Done |
-| 003 | Timer-triggered snapshots | Planned |
+| 003 | Scheduled weather snapshots ([spec](specs/003-weather-snapshots.md)) | Approved |
 | 004 | Deploy to Azure           | Planned |
 
 ## Prerequisites
