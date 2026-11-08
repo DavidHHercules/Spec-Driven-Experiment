@@ -28,7 +28,7 @@ describe('handleWeatherRequest — success path', () => {
     await handleWeatherRequest(q('lat=47.6&lon=-122.3'), deps);
 
     expect(calls).toHaveLength(1);
-    const url = new URL(calls[0]!);
+    const url = new URL(calls[0]!.url);
     expect(url.pathname).toBe('/v1/forecast');
     expect(url.searchParams.get('latitude')).toBe('47.6');
     expect(url.searchParams.get('longitude')).toBe('-122.3');
@@ -36,11 +36,11 @@ describe('handleWeatherRequest — success path', () => {
 
   it('R10/R11: uses the injected base URL', async () => {
     const { deps, calls } = makeDeps({ fetch: [{ status: 200, json: upstreamBody() }] });
-    deps.settings = { OPEN_METEO_BASE_URL: 'http://localhost:7777' };
+    deps.settings = { ...deps.settings, OPEN_METEO_BASE_URL: 'http://localhost:7777' };
 
     await handleWeatherRequest(q('lat=1&lon=2'), deps);
 
-    expect(calls[0]).toMatch(/^http:\/\/localhost:7777\/v1\/forecast\?/);
+    expect(calls[0]!.url).toMatch(/^http:\/\/localhost:7777\/v1\/forecast\?/);
   });
 
   it('R12/R13: values come from upstream unchanged; condition matches the code', async () => {

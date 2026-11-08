@@ -15,7 +15,7 @@ only test *setup* (and only where the refactor forces it).
 |------|-------|-------|--------|
 | T14 | Refactor: `Deps.settings` + `log.warn` | — | ☑ |
 | T15 | Refactor: extract `fetchAttemptOnce` | — | ☑ |
-| T16 | Fake fetch upgrades | N4, N6 | ☐ |
+| T16 | Fake fetch upgrades | N4, N6 | ☑ |
 | T17 | Attempt timeout + abort | R22, R24, N6 | ☐ |
 | T18 | Resilience config | R32, R33, N5 | ☐ |
 | T19 | Retry loop | R25–R27, R29, R30 | ☐ |
@@ -51,7 +51,7 @@ Per plan §6: `{ hang: true }`, `{ status, hangBody: true }`, calls recorded as 
 `makeDeps` defaults `UPSTREAM_MAX_ATTEMPTS: '1'`.
 
 **Done when**
-- [ ] Existing tests updated for the new `calls` shape (setup only) and pass.
+- [x] Existing tests updated for the new `calls` shape (setup only) and pass.
 
 ## T17 — Attempt timeout + abort
 
