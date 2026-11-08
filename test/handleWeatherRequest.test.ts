@@ -207,3 +207,41 @@ describe('handleWeatherRequest — timeouts (spec 002)', () => {
     expect(logs.error.join('\n')).toContain('timeout after 2000ms');
   });
 });
+
+describe('handleWeatherRequest — configuration (spec 002)', () => {
+  it('R33: invalid setting → warning logged, request still succeeds', async () => {
+    const { deps, logs } = makeDeps({ fetch: [{ status: 200, json: upstreamBody() }] });
+    deps.settings = { ...deps.settings, UPSTREAM_TIMEOUT_MS: 'abc' };
+
+    const res = await handleWeatherRequest(q('lat=1&lon=2'), deps);
+
+    expect(res.status).toBe(200);
+    expect(logs.warn).toHaveLength(1);
+    expect(logs.warn[0]).toContain('UPSTREAM_TIMEOUT_MS');
+  });
+
+  it('R32: configured timeout is used', async () => {
+    vi.useFakeTimers();
+    try {
+      const { deps } = makeDeps({ fetch: [{ hang: true }] });
+      deps.settings = { ...deps.settings, UPSTREAM_TIMEOUT_MS: '300' };
+      const p = handleWeatherRequest(q('lat=1&lon=2'), deps);
+      await vi.advanceTimersByTimeAsync(300);
+      expect((await p).status).toBe(504);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
+describe('handleWeatherRequest — configuration warnings on every invocation', () => {
+  it('R33: warning is logged even when the query is invalid', async () => {
+    const { deps, logs } = makeDeps({ fetch: [] });
+    deps.settings = { ...deps.settings, UPSTREAM_MAX_ATTEMPTS: 'lots' };
+
+    const res = await handleWeatherRequest(q('lat=abc'), deps);
+
+    expect(res.status).toBe(400);
+    expect(logs.warn.join('\n')).toContain('UPSTREAM_MAX_ATTEMPTS');
+  });
+});

@@ -17,7 +17,7 @@ only test *setup* (and only where the refactor forces it).
 | T15 | Refactor: extract `fetchAttemptOnce` | — | ☑ |
 | T16 | Fake fetch upgrades | N4, N6 | ☑ |
 | T17 | Attempt timeout + abort | R22, R24, N6 | ☑ |
-| T18 | Resilience config | R32, R33, N5 | ☐ |
+| T18 | Resilience config | R32, R33, N5 | ☑ |
 | T19 | Retry loop | R25–R27, R29, R30 | ☐ |
 | T20 | Wire retries into the handler | R28, R29, R31 | ☐ |
 | T21 | Adapter + local acceptance | R22, R24, R33, §9 | ☐ |
@@ -67,11 +67,11 @@ Per plan §6: `{ hang: true }`, `{ status, hangBody: true }`, calls recorded as 
 ## T18 — Resilience config
 
 **Tests first** (`config.test.ts`):
-- [ ] R32: unset / empty → defaults 2000 / 3, no warnings.
-- [ ] R32 / N5: boundaries 100, 5000, 1, 4 accepted.
-- [ ] R33: `abc`, `0`, `2.5`, `-5`, `99`, `5001`, `9999` → default + warning naming setting and value.
-- [ ] F5: `" 3 "` → 3, no warning.
-- [ ] R33 (handler): warnings are logged via `log.warn` and the request still succeeds.
+- [x] R32: unset / empty → defaults 2000 / 3, no warnings.
+- [x] R32 / N5: boundaries 100, 5000, 1, 4 accepted.
+- [x] R33: `abc`, `0`, `2.5`, `-5`, `99`, `5001`, `9999` → default + warning naming setting and value.
+- [x] F5: `" 3 "` → 3, no warning.
+- [x] R33 (handler): warnings are logged via `log.warn` and the request still succeeds.
 
 ## T19 — Retry loop
 

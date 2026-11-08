@@ -1,3 +1,4 @@
+import { resolveResilienceConfig } from './config';
 import { errorBody } from './errors';
 import { fetchAttemptOnce } from './fetchAttempt';
 import { buildForecastUrl, resolveBaseUrl } from './openMeteo';
@@ -10,7 +11,11 @@ import { describeWeatherCode } from './weatherCodes';
  * everything non-deterministic comes in through `deps` (N1).
  */
 export async function handleWeatherRequest(q: URLSearchParams, deps: Deps): Promise<CoreResponse> {
-  // R2–R8: validate before anything else; R9: upstream is never called on invalid input.
+  // R32, R33: invalid settings fall back to defaults; warn on EVERY invocation, keep serving.
+  const { config, warnings } = resolveResilienceConfig(deps.settings);
+  for (const w of warnings) deps.log.warn(w);
+
+  // R2–R8: validate the query; R9: upstream is never called on invalid input.
   const input = validateQuery(q);
   if (!input.ok) {
     return { status: 400, body: errorBody(input.code, input.message) };
@@ -20,7 +25,7 @@ export async function handleWeatherRequest(q: URLSearchParams, deps: Deps): Prom
   const url = buildForecastUrl(resolveBaseUrl(deps.settings['OPEN_METEO_BASE_URL']), lat, lon);
 
   const startedAt = deps.now();
-  const outcome = await fetchAttemptOnce(deps.fetch, url, 2000); // T18 makes this configurable
+  const outcome = await fetchAttemptOnce(deps.fetch, url, config.timeoutMs);
   const finishedAt = deps.now();
 
   if (outcome.kind !== 'ok') {
