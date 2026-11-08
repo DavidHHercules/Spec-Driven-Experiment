@@ -18,7 +18,7 @@
 | Task | Title | Rules | Status |
 |------|-------|-------|--------|
 | T1  | Project scaffolding | — | ☑ |
-| T2  | Shared types and error builder | §3 | ☐ |
+| T2  | Shared types and error builder | §3 | ☑ |
 | T3  | `parseCoordinate` | §4.1, D2 | ☐ |
 | T4  | `validateQuery` | R2–R8, R19, R21 | ☐ |
 | T5  | Weather code mapping | R13, R14, §5 | ☐ |
@@ -53,8 +53,8 @@ Install `@azure/functions` (dependency) and `typescript`, `vitest`, `@types/node
 `errorBody(code, message)` helper that produces the spec §3 error shape.
 
 **Done when**
-- [ ] `npm run build` and `npm run typecheck` succeed (types compile under `strict`).
-- [ ] One test confirms `errorBody` output matches spec §3 exactly.
+- [x] `npm run build` and `npm run typecheck` succeed (types compile under `strict`).
+- [x] One test confirms `errorBody` output matches spec §3 exactly.
 
 ## T3 — `parseCoordinate`
 
