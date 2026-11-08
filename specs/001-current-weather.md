@@ -135,7 +135,9 @@ digits, optionally followed by `.` and one or more digits.
 ### Upstream failure (minimal — expanded in Spec 002)
 
 - **R15** — Given Open-Meteo responds with a non-2xx status, then respond `502` with code `UPSTREAM_ERROR`.
+  ↳ *Amended by [Spec 002](002-upstream-resilience.md#6-changes-to-spec-001): 500/502/503/504 are retried before this applies.*
 - **R16** — Given the request to Open-Meteo fails at the network level, then respond `502` with code `UPSTREAM_ERROR`.
+  ↳ *Amended by [Spec 002](002-upstream-resilience.md#6-changes-to-spec-001): retried before this applies.*
 - **R17** — Given Open-Meteo returns 2xx but the body is not valid JSON, or any field required by R12 is missing, `null`, or the wrong type, then respond `502` with code `UPSTREAM_BAD_RESPONSE`. Expected types: *(D5)*
   - `current.temperature_2m` — finite number
   - `current.wind_speed_10m` — finite number
@@ -175,6 +177,7 @@ digits, optionally followed by `.` and one or more digits.
 - **N1** — Unit tests must not make real network calls.
 - **N2** — The validation and mapping logic must be testable without the Azure Functions runtime.
 - **N3** — Each request logs one line on success including lat, lon, and upstream duration in ms.
+  ↳ *Amended by [Spec 002](002-upstream-resilience.md#6-changes-to-spec-001): also includes attempt count (R31).*
 
 ## 7. Acceptance criteria
 
@@ -252,3 +255,4 @@ reasoning survives even if the people who made it are gone.
 | 2026-11-07 | Review: resolved open questions as D1–D5; added R19, R20, §4.1; tightened R4, R5, R10, R14, R17. Status → Approved. |
 | 2026-11-07 | Amendment from planning feedback (plan §9 F1–F3): added R21 / D6 (duplicate params), clarified R11 / D7 (empty and trailing-slash base URL). |
 | 2026-11-08 | Implemented (tasks T1–T13). All acceptance criteria met; no behavior changes from the approved spec. Status → Implemented. |
+| 2026-11-08 | R15, R16, N3 amended by Spec 002 (pointers added; original wording kept). |
