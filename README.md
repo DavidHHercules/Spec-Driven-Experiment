@@ -23,6 +23,10 @@ Every change follows the same loop. No code is written until its spec is approve
 | 003 | Scheduled weather snapshots ([spec](specs/003-weather-snapshots.md), [plan](specs/003-weather-snapshots.plan.md), [tasks](specs/003-weather-snapshots.tasks.md)) | ✅ Done |
 | 004 | Deployment readiness ([spec](specs/004-deployment-readiness.md), [plan](specs/004-deployment-readiness.plan.md), [tasks](specs/004-deployment-readiness.tasks.md)) | In progress |
 
+## Deploying
+
+See the [first deployment runbook](docs/deploy.md). CI runs on every push ([ci.yml](.github/workflows/ci.yml)); deploys are manual ([deploy.yml](.github/workflows/deploy.yml)).
+
 ## Prerequisites
 
 - Node.js 22+ (`engines` in package.json)

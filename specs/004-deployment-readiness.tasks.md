@@ -14,7 +14,7 @@ Same rules: in order, one task = one commit, tests first where there is code.
 | T33 | Deployment package script + check | R61 | ☑ |
 | T34 | CI workflow | R58, N11, N12 | ☑ |
 | T35 | Deploy workflow | R59 | ☑ |
-| T36 | Runbook | R60, N13 | ☐ |
+| T36 | Runbook | R60, N13 | ☑ |
 | T37 | Verification sweep | §5 | ☐ |
 | T38 | Acceptance review | §8 | ☐ |
 
@@ -59,8 +59,8 @@ Same rules: in order, one task = one commit, tests first where there is code.
 ## T36 — Runbook
 
 **Done when**
-- [ ] `docs/deploy.md` covers every R60 item and lists plan §7 as unverified.
-- [ ] README links to it.
+- [x] `docs/deploy.md` covers every R60 item and lists plan §7 as unverified.
+- [x] README links to it.
 
 ## T37 — Verification sweep
 
